@@ -267,6 +267,10 @@
                     .domain([1500, 2500])
                     .range(["#FFA346", "#46b7ff", "#c200a9"]);
 
+                const radiusScale = d3.scaleThreshold()
+                    .domain([1500, 2500])
+                    .range([3, 4, 5]);
+
                 map.selectAll("path.Neighborhoods_").data(neighborhoods.features)
                     .enter().append('path')
                     .attr("class", "neighborhood")
@@ -282,29 +286,30 @@
                 let circles = map.selectAll("circle").data(properties)
                     .join("circle")
                     .attr("class", "circlePoints")
-                    .attr("r", 2.5)
+                    .attr("r", d => radiusScale(d['Finished Size (Sq.Ft.)']))
                     .attr("fill", d => colorScale(d['Finished Size (Sq.Ft.)']))
                     .attr("cx", d => d.Position[0])
                     .attr("cy", d => d.Position[1]);
 
-
                 // Runs update function when any of the select drop-downs are changed
-                d3.select(".selectZipCode").on("checked", function(d) {
+                d3.select(".selectZipCode").on("change", function(d) {
                     update()
                 })
-                d3.select(".selectPropertyType").on("checked", function(d) {
+                d3.select(".selectPropertyType").on("change", function(d) {
                     update()
                 })
-                d3.select(".selectRentPrice").on("checked", function(d) {
+                d3.select(".selectRentPrice").on("change", function(d) {
                         update()
                     })
                     // Runs reset function when reset button is clicked
-                d3.select("#resetbutton").on("click", function(d) {
+                d3.select("#resetbutton").on("change", function(d) {
                     reset()
                 })
 
                 //Deletes old points and replaces with new points that fit the criteria of the four filter select options
-                function update() {}
+                function update() {
+
+                }
 
                 //Resets all filters and displays all points
                 function reset() {}
