@@ -9,11 +9,11 @@
 
 
     <title>INFO4310 HW3</title>
+
+    <style>
+
+    </style>
 </head>
-
-<style>
-
-</style>
 
 <body>
     <h3>Kristy Liu (kl768), Marcella Imoisili (mii7)<br><br><strong>An interactive tool for the Zillow PA home datase.</strong>
@@ -47,6 +47,7 @@
                 var path = d3.geoPath().projection(projection);
 
                 map.selectAll("path.Neighborhoods_").data(neighborhoods.features)
+                    .enter().append('path')
                     .attr("class", "neighborhood")
                     .attr("fill", "#EBEBEB")
                     .attr("stroke", "white")
