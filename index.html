@@ -46,7 +46,7 @@
                 var projection = d3.geoMercator().fitSize([mapWidth, mapHeight], neighborhoods);
                 var path = d3.geoPath().projection(projection);
 
-                map.selectAll("path.Neighborhoods_").data(neighborhoods.features)
+                map.selectAll("path.neighborhood").data(neighborhoods.features)
                     .enter().append('path')
                     .attr("class", "neighborhood")
                     .attr("fill", "#EBEBEB")
