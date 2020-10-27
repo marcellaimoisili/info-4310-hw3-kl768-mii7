@@ -11,15 +11,132 @@
     <title>INFO4310 HW3</title>
 
     <style>
+    .selectZipCode text, .selectPropertyType text, .selectRentPrice text{
+      margin-right: 15px;
+    }
+
+    .selectZipCode, .selectPropertyType, .selectRentPrice {
+      margin-right: 5px;
+    }
+
+    .ZipCodeButton{
+      margin-right: 15px;
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+
+    #resetbutton{
+      margin-top: 30px;
+    }
+
+    #flexPanel{
+      display: flex;
+    }
+
+    #filterPanel{
+      width: 560px;
+      padding: 20px;
+      padding-top: 30px;
+    }
+
+    #mapPanel{
+      padding: 20px;
+      background-color: #A5ACAF;
+    }
+
+    .headerflex {
+      background-color: #153859;
+      padding: 10px;
+      margin: 0 auto;
+      display: flex;
+      color: white;
+    }
+
+    #headertitle{
+      flex: 4;
+    }
+
+    #headertitle h1{
+      text-align: left;
+      margin-left: 20px;
+      font-size: 40px;
+    }
+
+    #headerdetails{
+      text-align: right;
+      padding-right: 10px;
+      margin-top: 60px;
+      flex: 1;
+    }
+
+    #headerdetails h4{
+      margin: 0;
+      font-style: italic;
+      font-weight: normal;
+    }
+
+    body {
+      font-family: Helvetica;
+    }
 
     </style>
 </head>
 
 <body>
-    <h3>Kristy Liu (kl768), Marcella Imoisili (mii7)<br><br><strong>An interactive tool for the Zillow Pittsburgh home datase.</strong>
-    </h3>
-    <p id='p1'>
-        <svg id='viz' height='850' width='850'></svg>
+  <div class = "headerflex">
+    <div id = "headertitle">
+      <h1>Pittsburgh RentFinder</h1>
+    </div>
+    <div id = "headerdetails">
+      <h4>INFO 4310 HW #3</h4>
+      <h4>Kristy Liu (kl768), Marcella Imoisili (mii7)</h4>
+    </div>
+  </div>
+  <h3>
+      <strong>An interactive tool for the Zillow Pittsburgh home datase.</strong>
+  </h3>
+    <div id='p1'>
+      <div id = "flexPanel">
+        <div id = "mapPanel">
+          <svg id='viz' height='600' width='850'></svg>
+        </div>
+
+        <div id = "filterPanel">
+          <h3>Filter By:</h3>
+
+          <div class = "selectRentPrice">
+            <h4>Rent Price</h4>
+            <div id="checkBoxRentPriceDiv"></div>
+          </div>
+
+          <div class = "selectPropertyType">
+            <h4>Property Type</h4>
+            <div id="checkBoxPropertyTypeDiv"></div>
+          </div>
+
+          <script>
+          function checkAllZipCodes() {
+              d3.selectAll('.selectZipCode').property('checked',true);
+          }
+          function uncheckAllZipCodes() {
+              d3.selectAll('.selectZipCode').property('checked',false);
+          }
+          </script>
+
+          <div class = "selectZipCode">
+            <h4>Zip Code</h4>
+            <div id="checkBoxZipCodeDiv"></div>
+            <button type='button' class="ZipCodeButton" onclick='checkAllZipCodes()'>Check All Zip Codes</button>
+            <button type='button' class="ZipCodeButton" onclick='uncheckAllZipCodes()'>Uncheck All Zip Codes </button>
+          </div>
+
+          <div class = "resetbutton">
+            <button type="button" id="resetbutton">Reset All Filters</button>
+          </div>
+        </div>
+
+        </div>
+
         <script>
             //python3 -m http.server
             const svg = d3.select('#viz');
@@ -42,6 +159,55 @@
                 const pb = await d3.json('pittsburgh_neighborhoods.json');
                 var properties = await d3.csv("./zillow_pittsburgh_filtered.csv");
 
+                var allRentPrices = ["< $1K", "$1K - $2K", "$2K - $3K", "> $3K"]
+                var allPropertyTypes = ["Single Family House", "Townhouse", "Condo", "Multi Family House"]
+                var allZipCodes = []
+
+                properties.forEach(d => {
+                  if (d['Property Type'] == "Condominium"){
+                    d['Property Type'] = "Condo"
+                  }
+                  if (d['Property Type'] == "SingleFamily"){
+                    d['Property Type'] = "Single Family House"
+                  }
+                  if (d['Property Type'] == "MultiFamily2to4"){
+                    d['Property Type'] = "Multi Family House"
+                  }
+                  if (!allZipCodes.includes(d['Zipcode'])){
+                      allZipCodes.push(d['Zipcode'])
+                  }
+                });
+                allZipCodes.sort();
+
+                // Initialize Filters
+                allZipCodes.forEach(function (d,i){
+                  d3.select("#checkBoxZipCodeDiv").append('input')
+                  .attr('type','checkbox')
+                  .attr('class','selectZipCode')
+                  .attr('value',d)
+                  d3.select("#checkBoxZipCodeDiv").append('text')
+                  .text(d)
+                });
+
+                allPropertyTypes.forEach(function (d,i){
+                  d3.select("#checkBoxPropertyTypeDiv").append('input')
+                  .attr('type','checkbox')
+                  .attr('class','selectPropertyType')
+                  .attr('value',d)
+                  d3.select("#checkBoxPropertyTypeDiv").append('text')
+                  .text(d)
+                });
+
+                allRentPrices.forEach(function (d,i){
+                  d3.select("#checkBoxRentPriceDiv").append('input')
+                  .attr('type','checkbox')
+                  .attr('class','selectRentPrice')
+                  .attr('value',d)
+                  d3.select("#checkBoxRentPriceDiv").append('text')
+                  .text(d)
+                });
+
+                //Create Map
                 var neighborhoods = topojson.feature(pb, pb.objects.Neighborhoods_);
                 var projection = d3.geoMercator().fitSize([mapWidth, mapHeight], neighborhoods);
                 var path = d3.geoPath().projection(projection);
@@ -75,7 +241,7 @@
             }
             requestData();
         </script>
-    </p>
+    </div>
 </body>
 
 </html>
