@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://d3js.org/topojson.v2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+
+
+    <title>INFO4310 HW3</title>
+</head>
+
+<style>
+
+</style>
+
+<body>
+    <h3>Kristy Liu (kl768), Marcella Imoisili (mii7)<br><br><strong>An interactive tool for the Zillow PA home datase.</strong>
+    </h3>
+    <p id='p1'>
+        <svg id='viz' height='750' width='950'></svg>
+        <script>
+            //python3 -m http.server
+            const svg = d3.select('#viz');
+            const width = svg.attr('width');
+            const height = svg.attr('height');
+
+            const margin = {
+                top: 20,
+                right: 20,
+                bottom: 20,
+                left: 20
+            };
+
+            const mapWidth = width - margin.left - margin.right;
+            const mapHeight = height - margin.top - margin.bottom;
+            const map = svg.append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            const requestData = async function() {
+                const pb = await d3.json('pittsburgh_neighborhoods.json');
+                console.log(pb);
+
+                var neighborhoods = topojson.feature(pb, pb.objects.Neighborhoods_);
+                var projection = d3.geoMercator().fitSize([mapWidth, mapHeight], neighborhoods);
+                var path = d3.geoPath().projection(projection);
+
+                map.selectAll("path.Neighborhoods_").data(neighborhoods.features)
+                    .attr("class", "neighborhood")
+                    .attr("fill", "#EBEBEB")
+                    .attr("stroke", "white")
+                    .attr("stroke-width", 3)
+                    .attr("d", path);
+
+                svg.append("g")
+                    .attr("transform", "translate(500,10)");
+
+            }
+            requestData();
+        </script>
+    </p>
+</body>
+
+</html>
