@@ -46,12 +46,8 @@
                 var projection = d3.geoMercator().fitSize([mapWidth, mapHeight], neighborhoods);
                 var path = d3.geoPath().projection(projection);
 
-                const finishedsizeExtent = d3.extent(properties,
-                  d => d['Finished Size (Sq.Ft.)']
-                );
-
-                const colorScale = d3.scaleQuantile()
-                    .domain(finishedsizeExtent)
+                const colorScale = d3.scaleThreshold()
+                    .domain([1500,2500])
                     .range(["#FFA346", "#46b7ff", "#c200a9"]);
 
                 map.selectAll("path.Neighborhoods_").data(neighborhoods.features)
