@@ -40,11 +40,19 @@
 
             const requestData = async function() {
                 const pb = await d3.json('pittsburgh_neighborhoods.json');
-                console.log(pb);
+                var properties = await d3.csv("./zillow_pittsburgh_filtered.csv");
 
                 var neighborhoods = topojson.feature(pb, pb.objects.Neighborhoods_);
                 var projection = d3.geoMercator().fitSize([mapWidth, mapHeight], neighborhoods);
                 var path = d3.geoPath().projection(projection);
+
+                const finishedsizeExtent = d3.extent(properties,
+                  d => d['Finished Size (Sq.Ft.)']
+                );
+
+                const colorScale = d3.scaleQuantile()
+                    .domain(finishedsizeExtent)
+                    .range(["#FFA346", "#46b7ff", "#c200a9"]);
 
                 map.selectAll("path.Neighborhoods_").data(neighborhoods.features)
                     .enter().append('path')
@@ -53,6 +61,17 @@
                     .attr("stroke", "white")
                     .attr("stroke-width", 3)
                     .attr("d", path);
+
+                properties.forEach(d => {
+                    d.Position = projection([d.Longitude, d.Latitude]);
+                });
+
+                map.selectAll("circle").data(properties)
+                    .join("circle")
+                    .attr("r", 2.5)
+                    .attr("fill", d => colorScale(d['Finished Size (Sq.Ft.)']))
+                    .attr("cx", d => d.Position[0])
+                    .attr("cy", d => d.Position[1]);
 
                 svg.append("g")
                     .attr("transform", "translate(500,10)");
