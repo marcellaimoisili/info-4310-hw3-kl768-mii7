@@ -29,23 +29,48 @@
       margin-top: 30px;
     }
 
+    #propertyDetailsPanel{
+      height: 463px;
+      flex: 0 0 6em;
+      padding: 20px;
+      margin-top: 80px;
+      background-color: #095499;
+      color: white;
+    }
+
+    #propertyDetailsPanel text{
+
+    }
+
     #flexPanel{
       display: flex;
     }
 
     #filterPanel{
-      width: 560px;
+      height: 460px;
       padding: 20px;
-      padding-top: 30px;
+      margin-top: 80px;
+      background-color: #A5ACAF;
+      border: 2px solid #095499;
+      flex: 0 0 42em;
+    }
+
+    #filterPanel h3{
+      font-size: 20px;
+      text-align: center;
+      margin-top: 0px;
+    }
+
+    #filterPanel h4{
+      font-size: 18px;
     }
 
     #mapPanel{
-      padding: 20px;
-      background-color: #A5ACAF;
+      padding: 5px;
     }
 
     .headerflex {
-      background-color: #153859;
+      background-color: #095499;
       padding: 10px;
       margin: 0 auto;
       display: flex;
@@ -75,9 +100,25 @@
       font-weight: normal;
     }
 
+    path {
+      stroke: #153859;
+      stroke-width: 0.5px;
+      fill: #A5ACAF;
+    }
+
+    .circlePoints {
+      stroke: #153859;
+    }
+
     body {
       font-family: Helvetica;
+      background: #f9f9f9;
     }
+
+    .introPanel{
+      padding: 10px;
+    }
+
 
     </style>
 </head>
@@ -92,13 +133,14 @@
       <h4>Kristy Liu (kl768), Marcella Imoisili (mii7)</h4>
     </div>
   </div>
-  <h3>
-      <strong>An interactive tool for the Zillow Pittsburgh home datase.</strong>
-  </h3>
+  <div class = "introPanel">
+    <h3><strong>An interactive tool for the Zillow Pittsburgh home database.</strong></h3>
+    <p>How to Use:</p>
+  </div>
     <div id='p1'>
       <div id = "flexPanel">
         <div id = "mapPanel">
-          <svg id='viz' height='600' width='850'></svg>
+          <svg id='viz' height='600' width='800'></svg>
         </div>
 
         <div id = "filterPanel">
@@ -135,6 +177,14 @@
           </div>
         </div>
 
+        <div id = "propertyDetailsPanel">
+          <h3><em>Hover over a point to view specific information about a property!</em></h3>
+        </div>
+
+        </div>
+
+        <div id = "savedSearchPanel">
+          <h2>Saved Properties</h2>
         </div>
 
         <script>
@@ -228,12 +278,57 @@
                     d.Position = projection([d.Longitude, d.Latitude]);
                 });
 
-                map.selectAll("circle").data(properties)
+                let circles = map.selectAll("circle").data(properties)
                     .join("circle")
+                    .attr("class", "circlePoints")
                     .attr("r", 2.5)
                     .attr("fill", d => colorScale(d['Finished Size (Sq.Ft.)']))
                     .attr("cx", d => d.Position[0])
                     .attr("cy", d => d.Position[1]);
+
+
+                // Runs update function when any of the select drop-downs are changed
+                d3.select(".selectZipCode").on("checked", function(d) { update() })
+                d3.select(".selectPropertyType").on("checked", function(d) { update() })
+                d3.select(".selectRentPrice").on("checked", function(d) { update() })
+                // Runs reset function when reset button is clicked
+                d3.select("#resetbutton").on("click", function(d) { reset() })
+
+                //Deletes old points and replaces with new points that fit the criteria of the four filter select options
+                function update() {
+                }
+
+                //Resets all filters and displays all points
+                function reset(){
+                }
+
+                //Mouseovers
+                circles.on("mouseover", function (d) {
+                  d3.select(this)
+                    .transition().duration(200)
+                    .attr("radius", 5);
+                    info.transition()
+                    info.html("<p><b>"+"Size: "+"</b>"+d["Finished Size (Sq.Ft.)"]+"</p>"
+                    + "<p><b>"+"Property Type: "+"</b>"+d["Property Type"]+"</p>"
+                    + "<p><b>"+"Neighborhood: "+"</b>"+d["Neighborhood"]+"</p>"
+                    +"<p><b>"+"Year Built: "+"</b>"+d["Year Built"]+"</p>"
+                    +"<p><b>"+"Rent: "+"</b>"+d["Rent Amount"]+"</p>"
+                    +"<p><b>"+"Rent per Sq.Ft.: "+"</b>"+d["Rent-to-Finished Size Ratio"]+"</p>"
+                    +"<p><b>"+"Bedrooms: "+"</b>"+d["Bedrooms"]+"</p>"
+                    +"<p><b>"+"Bathrooms: "+"</b>"+d["Bathroom"]+"</p>")
+                });
+
+                // Mouseout Cleanup Effect
+                circles.on("mouseout", function (d) {
+                  d3.select(this)
+                    .transition().duration(200)
+                    .attr("radius", 2.5)
+                    info.transition()
+                    info.html("<h3><em>"+"Hover over a point to view specific information about a property!"+"</em></h3>")
+                });
+
+                let info = d3.select("#propertyDetailsPanel")
+                  .style("opacity", 0.95);
 
                 svg.append("g")
                     .attr("transform", "translate(500,10)");
