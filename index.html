@@ -352,7 +352,6 @@
                         }
                     });
 
-                    console.log(price_choices);
                     if (price_choices.includes(allRentPrices[4])) {
                         circles.attr('visibility', 'visible');
                     }
@@ -458,6 +457,26 @@
                     // newRows.exit()
                     //     .remove();
 
+                    //Property Type Filter
+                    var property_choices = [];
+                    d3.selectAll(".selectPropertyType").each(function(d) {
+                        cb = d3.select(this);
+                        if (cb.property("checked")) {
+                            property_choices.push(cb.property("value"));
+                        }
+                    });
+
+                    property_choices.forEach(function(prop, i) {
+                        circles.attr('visibility', properties => {
+                            if (property_choices.includes(properties['Property Type'])) {
+                                return "visible";
+                            } else {
+                                return "hidden";
+                            }
+                        });
+                    });
+
+                    console.log(property_choices);
                 }
 
                 //Resets all filters and displays all points
