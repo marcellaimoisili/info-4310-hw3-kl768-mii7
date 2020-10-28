@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://d3js.org/topojson.v2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+
+
+    <title>INFO4310 HW3</title>
+
+    <style>
+        .selectZipCode text,
+        .selectPropertyType text,
+        .selectRentPrice text {
+            margin-right: 15px;
+        }
+
+        .selectZipCode,
+        .selectPropertyType,
+        .selectRentPrice {
+            margin-right: 5px;
+        }
+
+        .ZipCodeButton {
+            margin-right: 15px;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+
+        #resetbutton {
+            margin-top: 30px;
+        }
+
+        #propertyDetailsPanel {
+            height: 463px;
+            flex: 0 0 6em;
+            padding: 20px;
+            margin-top: 80px;
+            background-color: #095499;
+            color: white;
+        }
+
+
+        #flexPanel {
+            display: flex;
+        }
+
+        #filterPanel {
+            height: 460px;
+            padding: 20px;
+            margin-top: 80px;
+            background-color: #A5ACAF;
+            border: 2px solid #095499;
+            flex: 0 0 42em;
+        }
+
+        #filterPanel h3 {
+            font-size: 20px;
+            text-align: center;
+            margin-top: 0px;
+        }
+
+        #filterPanel h4 {
+            font-size: 18px;
+        }
+
+        #mapPanel {
+            padding: 5px;
+        }
+
+        .headerflex {
+            background-color: #095499;
+            padding: 10px;
+            margin: 0 auto;
+            display: flex;
+            color: white;
+            z-index: 1000;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        #headertitle {
+            flex: 4;
+        }
+
+        #headertitle h1 {
+            text-align: left;
+            margin-left: 20px;
+            font-size: 40px;
+        }
+
+        #headerdetails {
+            text-align: right;
+            padding-right: 10px;
+            margin-top: 60px;
+            flex: 1;
+        }
+
+        #headerdetails h4 {
+            margin: 0;
+            font-style: italic;
+            font-weight: normal;
+        }
+
+        path {
+            stroke: #153859;
+            stroke-width: 0.5px;
+            fill: #A5ACAF;
+        }
+
+        .circlePoints {
+            stroke: #153859;
+        }
+
+        body {
+            font-family: Helvetica;
+            background: #f9f9f9;
+        }
+
+        .introPanel {
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="headerflex">
+        <div id="headertitle">
+            <h1>Pittsburgh RentFinder</h1>
+        </div>
+        <div id="headerdetails">
+            <h4>INFO 4310 HW #3</h4>
+            <h4>Kristy Liu (kl768), Marcella Imoisili (mii7)</h4>
+        </div>
+    </div>
+    <div class="introPanel">
+        <h3><strong>An interactive tool for the Zillow Pittsburgh home database.</strong></h3>
+        <p>How to Use:</p>
+    </div>
+    <div id='p1'>
+        <div id="flexPanel">
+            <div id="mapPanel">
+                <svg id='viz' height='600' width='800'></svg>
+            </div>
+
+            <div id="propertyDetailsPanel">
+                <h3><em>Hover over a point to view specific information about a property!</em></h3>
+            </div>
+
+            <div id="filterPanel">
+                <h3>Filter By:</h3>
+
+                <div class="selectRentPrice">
+                    <h4>Rent Price</h4>
+                    <div id="checkBoxRentPriceDiv"></div>
+                </div>
+
+                <div class="selectPropertyType">
+                    <h4>Property Type</h4>
+                    <div id="checkBoxPropertyTypeDiv"></div>
+                </div>
+
+                <script>
+                    function checkAllZipCodes() {
+                        d3.selectAll('.selectZipCode').property('checked', true);
+                    }
+
+                    function uncheckAllZipCodes() {
+                        d3.selectAll('.selectZipCode').property('checked', false);
+                    }
+                </script>
+
+                <div class="selectZipCode">
+                    <h4>Zip Code</h4>
+                    <div id="checkBoxZipCodeDiv"></div>
+                    <button type='button' class="ZipCodeButton" onclick='checkAllZipCodes()'>Check All Zip Codes</button>
+                    <button type='button' class="ZipCodeButton" onclick='uncheckAllZipCodes()'>Uncheck All Zip Codes </button>
+                </div>
+
+                <div class="applyResetButtons">
+                    <button type="button" id="applybutton">Apply Filters</button>
+                    <button type="button" id="resetbutton">Reset Filters</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="savedSearchPanel">
+            <h2>Saved Properties</h2>
+        </div>
+
+        <script>
+            //python3 -m http.server
+            const svg = d3.select('#viz');
+            const width = svg.attr('width');
+            const height = svg.attr('height');
+
+            const margin = {
+                top: 20,
+                right: 20,
+                bottom: 20,
+                left: 20
+            };
+
+            const mapWidth = width - margin.left - margin.right;
+            const mapHeight = height - margin.top - margin.bottom;
+            const map = svg.append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            const requestData = async function() {
+                const pb = await d3.json('pittsburgh_neighborhoods.json');
+                var properties = await d3.csv("./zillow_pittsburgh_filtered.csv");
+
+                var allRentPrices = ["< $1K", "$1K - $2K", "$2K - $3K", "> $3K"]
+                var allPropertyTypes = ["Single Family House", "Townhouse", "Condo", "Multi Family House"]
+                var allZipCodes = []
+
+                properties.forEach(d => {
+                    if (d['Property Type'] == "Condominium") {
+                        d['Property Type'] = "Condo"
+                    }
+                    if (d['Property Type'] == "SingleFamily") {
+                        d['Property Type'] = "Single Family House"
+                    }
+                    if (d['Property Type'] == "MultiFamily2to4") {
+                        d['Property Type'] = "Multi Family House"
+                    }
+                    if (!allZipCodes.includes(d['Zipcode'])) {
+                        allZipCodes.push(d['Zipcode'])
+                    }
+                    d['Rent Amount'] = Number(d['Rent Amount'])
+                });
+                allZipCodes.sort();
+
+                // Initialize Filters
+                allZipCodes.forEach(function(d, i) {
+                    d3.select("#checkBoxZipCodeDiv").append('input')
+                        .attr('type', 'checkbox')
+                        .attr('class', 'selectZipCode')
+                        .attr('value', d)
+                        .property('checked', true)
+                    d3.select("#checkBoxZipCodeDiv").append('text')
+                        .text(d)
+                });
+
+                allPropertyTypes.forEach(function(d, i) {
+                    d3.select("#checkBoxPropertyTypeDiv").append('input')
+                        .attr('type', 'checkbox')
+                        .attr('class', 'selectPropertyType')
+                        .attr('value', d)
+                        .property('checked', true)
+                    d3.select("#checkBoxPropertyTypeDiv").append('text')
+                        .text(d)
+                });
+
+                allRentPrices.forEach(function(d, i) {
+                    d3.select("#checkBoxRentPriceDiv").append('input')
+                        .attr('type', 'checkbox')
+                        .attr('class', 'selectRentPrice')
+                        .attr('name', 'selectRentPrice')
+                        .attr('value', d)
+                        .property('checked', true)
+                    d3.select("#checkBoxRentPriceDiv").append('text')
+                        .text(d)
+                });
+
+                //Create Map
+                var neighborhoods = topojson.feature(pb, pb.objects.Neighborhoods_);
+                var projection = d3.geoMercator().fitSize([mapWidth, mapHeight], neighborhoods);
+                var path = d3.geoPath().projection(projection);
+
+                const colorScale = d3.scaleThreshold()
+                    .domain([1500, 2500])
+                    .range(["#FFA346", "#46b7ff", "#c200a9"]);
+
+                const radiusScale = d3.scaleThreshold()
+                    .domain([1500, 2500])
+                    .range([3, 4, 5]);
+
+                map.selectAll("path.Neighborhoods_").data(neighborhoods.features)
+                    .enter().append('path')
+                    .attr("class", "neighborhood")
+                    .attr("fill", "#EBEBEB")
+                    .attr("stroke", "white")
+                    .attr("stroke-width", 3)
+                    .attr("d", path);
+
+                properties.forEach(d => {
+                    d.Position = projection([d.Longitude, d.Latitude]);
+                });
+
+                let circles = map.selectAll("circle").data(properties)
+                    .join("circle")
+                    .attr("class", "circlePoints")
+                    .attr('stroke-width', '1')
+                    .attr("r", d => radiusScale(d['Finished Size (Sq.Ft.)']))
+                    .attr("fill", d => colorScale(d['Finished Size (Sq.Ft.)']))
+                    .attr("cx", d => d.Position[0])
+                    .attr("cy", d => d.Position[1]);
+
+                // Runs update function when any of the select drop-downs are changed
+                d3.select("#applybutton").on("click", function(d) {
+                  filter()
+                });
+
+                // Runs reset function when reset button is clicked
+                d3.select("#resetbutton").on("click", function(d) {
+                  reset()
+                });
+
+                //Deletes old points and replaces with new points that fit the criteria of the four three select options
+                function filter() {
+
+                    //Price Filter
+                    var price_choices = [];
+                    d3.selectAll(".selectRentPrice").each(function(d) {
+                        cb = d3.select(this);
+                        if (cb.property("checked")) {
+                            price_choices.push(cb.property("value"));
+                        }
+                    });
+
+                    var dataFilterInitial = properties.map(function(d){
+                      if (price_choices.includes("< $1K")) {
+                        if ( d['Rent Amount'] < 1000){
+                          return d;
+                        }
+                      }
+                      if (price_choices.includes("$1K - $2K")) {
+                        if ( d['Rent Amount'] >= 1000 && d['Rent Amount'] <= 2000){
+                          return d;
+                        }
+                      }
+                      if (price_choices.includes("$2K - $3K")) {
+                        if ( d['Rent Amount'] >= 2000 && d['Rent Amount'] <= 3000){
+                          return d;
+                        }
+                      }
+                      if (price_choices.includes("> $3K")) {
+                        if ( d['Rent Amount'] > 3000){
+                          return d;
+                        }
+                      }
+                    })
+                    var dataFilter = dataFilterInitial.filter(function (d) {
+                      return d != null;
+                    });
+
+                    var property_choices = [];
+                    d3.selectAll(".selectPropertyType").each(function(d) {
+                        cb = d3.select(this);
+                        if (cb.property("checked")) {
+                            property_choices.push(cb.property("value"));
+                        }
+                    });
+                    var dataFilterInitial2 =
+                    dataFilter.map(function(d){
+                      for( i=0; i<property_choices.length; i++) {
+                          if ( d['Property Type'] == property_choices[i]){
+                            return d;
+                          }
+                        }
+                    });
+                    var dataFilter2 = dataFilterInitial2.filter(function (d) {
+                      return d != null;
+                    });
+
+                    var location_choices = [];
+                    d3.selectAll(".selectZipCode").each(function(d) {
+                        cb = d3.select(this);
+                        if (cb.property("checked")) {
+                            location_choices.push(cb.property("value"));
+                        }
+                    });
+                    var dataFilterInitial3 =
+                    dataFilter2.map(function(d){
+                      for( i=0; i<location_choices.length; i++) {
+                          if ( d['Zipcode'] == location_choices[i]){
+                            return d;
+                          }
+                        }
+                    });
+                    var dataFilter3 = dataFilterInitial3.filter(function (d) {
+                      return d != null;
+                    });
+
+                    map.selectAll("circle.circlePoints").remove();
+
+                    let circles = map.selectAll("circle.circlePoints").data(dataFilter3)
+                      .join("circle")
+                      .attr("class", "circlePoints")
+                      .attr('stroke-width', '1')
+                      .attr("r", d => radiusScale(d['Finished Size (Sq.Ft.)']))
+                      .attr("fill", d => colorScale(d['Finished Size (Sq.Ft.)']))
+                      .attr("cx", d => d.Position[0])
+                      .attr("cy", d => d.Position[1]);
+
+                    var visibleLength = 0
+                    circles.attr('visibility', properties => {
+                      visibleLength += 1
+                    })
+
+                    //Mouseovers
+                    circles.on("mouseover", function(d) {
+                        d3.select(this)
+                            .transition().duration(200)
+                            .attr('stroke-width', '4')
+                            .attr("radius", 5); //not sure if this is working
+                        info.transition()
+                        info.html("<p><b>" + "Size: " + "</b>" + d["Finished Size (Sq.Ft.)"] + "</p>" +
+                            "<p><b>" + "Property Type: " + "</b>" + d["Property Type"] + "</p>" +
+                            "<p><b>" + "Neighborhood: " + "</b>" + d["Neighborhood"] + "</p>" +
+                            "<p><b>" + "Year Built: " + "</b>" + d["Year Built"] + "</p>" +
+                            "<p><b>" + "Rent: " + "</b>" + d["Rent Amount"] + "</p>" +
+                            "<p><b>" + "Rent per Sq.Ft.: " + "</b>" + d["Rent-to-Finished Size Ratio"] + "</p>" +
+                            "<p><b>" + "Bedrooms: " + "</b>" + d["Bedrooms"] + "</p>" +
+                            "<p><b>" + "Bathrooms: " + "</b>" + d["Bathroom"] + "</p>")
+                    });
+
+                    // Mouseout Cleanup Effect
+                    circles.on("mouseout", function(d) {
+                        d3.select(this)
+                            .transition().duration(200)
+                            .attr('stroke-width', '1')
+                            .attr("radius", 2.5) //not sure if this is working
+                        info.transition()
+                        info.html("<h3><em>" + "Hover over a point to view specific information about a property!" + "</em></h3>")
+                    });
+
+                    let info = d3.select("#propertyDetailsPanel")
+                        .style("opacity", 0.95);
+                }
+
+                //Resets all filters and displays all points
+                function reset() {
+                  d3.selectAll(".selectPropertyType").property("checked", true);
+                  d3.selectAll(".selectRentPrice").property("checked", true);
+                  d3.selectAll(".selectZipCode").property("checked", true);
+                  filter()
+                }
+
+                //Mouseovers
+                circles.on("mouseover", function(d) {
+                    d3.select(this)
+                        .transition().duration(200)
+                        .attr('stroke-width', '4')
+                        .attr("radius", 5); //not sure if this is working
+                    info.transition()
+                    info.html("<p><b>" + "Size: " + "</b>" + d["Finished Size (Sq.Ft.)"] + "</p>" +
+                        "<p><b>" + "Property Type: " + "</b>" + d["Property Type"] + "</p>" +
+                        "<p><b>" + "Neighborhood: " + "</b>" + d["Neighborhood"] + "</p>" +
+                        "<p><b>" + "Year Built: " + "</b>" + d["Year Built"] + "</p>" +
+                        "<p><b>" + "Rent: " + "</b>" + d["Rent Amount"] + "</p>" +
+                        "<p><b>" + "Rent per Sq.Ft.: " + "</b>" + d["Rent-to-Finished Size Ratio"] + "</p>" +
+                        "<p><b>" + "Bedrooms: " + "</b>" + d["Bedrooms"] + "</p>" +
+                        "<p><b>" + "Bathrooms: " + "</b>" + d["Bathroom"] + "</p>")
+                });
+
+                // Mouseout Cleanup Effect
+                circles.on("mouseout", function(d) {
+                    d3.select(this)
+                        .transition().duration(200)
+                        .attr('stroke-width', '1')
+                        .attr("radius", 2.5) //not sure if this is working
+                    info.transition()
+                    info.html("<h3><em>" + "Hover over a point to view specific information about a property!" + "</em></h3>")
+                });
+
+                let info = d3.select("#propertyDetailsPanel")
+                    .style("opacity", 0.95);
+
+            }
+            requestData();
+        </script>
+    </div>
+</body>
+
+</html>
