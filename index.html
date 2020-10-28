@@ -258,8 +258,9 @@
 
                 allRentPrices.forEach(function(d, i) {
                     d3.select("#checkBoxRentPriceDiv").append('input')
-                        .attr('type', 'checkbox')
+                        .attr('type', 'radio')
                         .attr('class', 'selectRentPrice')
+                        .attr('name', 'selectRentPrice')
                         .attr('value', d)
                     d3.select("#checkBoxRentPriceDiv").append('text')
                         .text(d)
@@ -302,21 +303,47 @@
                 // Runs update function when any of the select drop-downs are changed
                 d3.select(".selectZipCode").on("change", function(d) {
                     update()
-                })
+                });
+
                 d3.select(".selectPropertyType").on("change", function(d) {
                     update()
-                })
+                });
+
+                var filtered_ranges = properties.map(function(properties) {
+                    return properties;
+                });
                 d3.select(".selectRentPrice").on("change", function(d) {
-                        update()
-                    })
-                    // Runs reset function when reset button is clicked
+                    // var price_range = this.value;
+                    // if (this.checked == allRentPrices[0]) { // adding data points
+                    //     var new_range = properties.filter(function(properties) {
+                    //         return properties['Rent Amount'] < 1000;
+                    //     });
+                    //     filtered_ranges = filtered_ranges.concat(new_range);
+                    // } else {
+                    //     filtered_ranges = filtered_ranges.filter(function(properties) {
+                    //         return !(properties['Rent Amount'] < 1000);
+                    //     });
+                    // }
+                    update();
+                });
+
+                // Runs reset function when reset button is clicked
                 d3.select("#resetbutton").on("change", function(d) {
                     reset()
-                })
+                });
 
                 //Deletes old points and replaces with new points that fit the criteria of the four filter select options
                 function update() {
+                    //     circles.enter().append("circle")
+                    //         .attr("class", "circlePoints")
+                    //         .attr('stroke-width', '1')
+                    //         .attr("r", d => radiusScale(d['Finished Size (Sq.Ft.)']))
+                    //         .attr("fill", d => colorScale(d['Finished Size (Sq.Ft.)']))
+                    //         .attr("cx", d => d.Position[0])
+                    //         .attr("cy", d => d.Position[1]);
+                    //     circles.exit().remove();
 
+                    //Price Filter
                     var price_choices = [];
                     d3.selectAll(".selectRentPrice").each(function(d) {
                         cb = d3.select(this);
@@ -329,44 +356,86 @@
                     if (price_choices.length < 1) {
                         circles.attr('visibility', 'visible');
                     }
-                    price_choices.forEach(p => {
-                        if (p == allRentPrices[0]) {
-                            circles.attr('visibility', properties => {
-                                if (properties['Rent Amount'] < 1000) {
-                                    return "visible";
-                                } else {
-                                    return "hidden";
-                                }
-                            });
-                        }
-                        if (p == allRentPrices[1]) {
-                            circles.attr('visibility', properties => {
-                                if (properties['Rent Amount'] > 1000 && properties['Rent Amount'] < 2000) {
-                                    return "visible";
-                                } else {
-                                    return "hidden";
-                                }
-                            });
-                        }
-                        if (p == allRentPrices[2]) {
-                            circles.attr('visibility', properties => {
-                                if (properties['Rent Amount'] > 2000 && properties['Rent Amount'] < 3000) {
-                                    return "visible";
-                                } else {
-                                    return "hidden";
-                                }
-                            });
-                        }
-                        if (p == allRentPrices[3]) {
-                            circles.attr('visibility', properties => {
-                                if (properties['Rent Amount'] > 3000) {
-                                    return "visible";
-                                } else {
-                                    return "hidden";
-                                }
-                            });
-                        }
-                    });
+                    if (price_choices.includes(allRentPrices[0])) {
+                        circles.attr('visibility', properties => {
+                            if (properties['Rent Amount'] < 1000) {
+                                return "visible";
+                            } else {
+                                return "hidden";
+                            }
+                        });
+                    }
+                    if (price_choices.includes(allRentPrices[1])) {
+                        circles.attr('visibility', properties => {
+                            if (properties['Rent Amount'] > 1000 && properties['Rent Amount'] < 2000) {
+                                return "visible";
+                            } else {
+                                return "hidden";
+                            }
+                        });
+                    }
+                    if (price_choices.includes(allRentPrices[2])) {
+                        circles.attr('visibility', properties => {
+                            if (properties['Rent Amount'] > 2000 && properties['Rent Amount'] < 3000) {
+                                return "visible";
+                            } else {
+                                return "hidden";
+                            }
+                        });
+                    }
+                    if (price_choices.includes(allRentPrices[3])) {
+                        circles.attr('visibility', properties => {
+                            if (properties['Rent Amount'] > 3000) {
+                                return "visible";
+                            } else {
+                                return "hidden";
+                            }
+                        });
+                    }
+                    //End of price filtering
+                    //Need to change to radio buttons my code isn't really elegant rn 
+                    //because it's not inclusive of all the ranges (if multiple ranges are checked it will only 
+                    //filter to show the largest price option of a given selection) 
+
+
+                    // price_choices.forEach(p => {
+                    //     if (p == allRentPrices[0]) {
+                    //         circles.attr('visibility', properties => {
+                    //             if (properties['Rent Amount'] < 1000) {
+                    //                 return "visible";
+                    //             } else {
+                    //                 return "hidden";
+                    //             }
+                    //         });
+                    //     }
+                    //     if (p == allRentPrices[1]) {
+                    //         circles.attr('visibility', properties => {
+                    //             if (properties['Rent Amount'] > 1000 && properties['Rent Amount'] < 2000) {
+                    //                 return "visible";
+                    //             } else {
+                    //                 return "hidden";
+                    //             }
+                    //         });
+                    //     }
+                    //     if (p == allRentPrices[2]) {
+                    //         circles.attr('visibility', properties => {
+                    //             if (properties['Rent Amount'] > 2000 && properties['Rent Amount'] < 3000) {
+                    //                 return "visible";
+                    //             } else {
+                    //                 return "hidden";
+                    //             }
+                    //         });
+                    //     }
+                    //     if (p == allRentPrices[3]) {
+                    //         circles.attr('visibility', properties => {
+                    //             if (properties['Rent Amount'] > 3000) {
+                    //                 return "visible";
+                    //             } else {
+                    //                 return "hidden";
+                    //             }
+                    //         });
+                    //     }
+                    // });
 
                     // if (choices.length > 0) {
                     //     newData = data.filter(function(d, i) {
