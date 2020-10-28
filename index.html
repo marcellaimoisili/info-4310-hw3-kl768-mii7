@@ -216,7 +216,7 @@
                 var properties = await d3.csv("./zillow_pittsburgh_filtered.csv");
                 console.log(properties)
 
-                var allRentPrices = ["< $1K", "$1K - $2K", "$2K - $3K", "> $3K"]
+                var allRentPrices = ["< $1K", "$1K - $2K", "$2K - $3K", "> $3K", "All"]
                 var allPropertyTypes = ["Single Family House", "Townhouse", "Condo", "Multi Family House"]
                 var allZipCodes = []
 
@@ -353,7 +353,7 @@
                     });
 
                     console.log(price_choices);
-                    if (price_choices.length < 1) {
+                    if (price_choices.includes(allRentPrices[4])) {
                         circles.attr('visibility', 'visible');
                     }
                     if (price_choices.includes(allRentPrices[0])) {
