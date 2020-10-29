@@ -163,7 +163,11 @@
         }
 
         .tableImage {
-            width: 90px;
+            width: 100px;
+        }
+
+        .tableImage img{
+            text-align: center;
         }
 
         .tableButton {
@@ -234,8 +238,7 @@
                 <div class="selectZipCode">
                     <h4>Zip Code</h4>
                     <div id="checkBoxZipCodeDiv"></div>
-                    <!-- <button type='button' class="ZipCodeButton1">Check All Zip Codes</button> we decided this button was unnecessary with our new/final filter implementation -->
-                    <button type='button' class="ZipCodeButton2">Uncheck All Zip Codes </button>
+                    <button type='button' class="ZipCodeButton2">Reset Zip Code Filters </button>
                 </div>
 
                 <div class="resetbutton">
@@ -250,7 +253,7 @@
                 <h2>Saved Properties</h2>
             </div>
             <div id="savedSearchTablePanel">
-                <table class="savedSearchTable">
+                <table id="savedSearchTable">
                     <thead>
                         <tr>
                             <th class="tableImage">Property Type</th>
@@ -701,7 +704,7 @@
 
                     matrix.push(newRow)
 
-                    var tr = d3.select(".savedSearchTable tbody")
+                    var tr = d3.select("#savedSearchTable tbody")
                         .selectAll("tr")
                         .data(matrix)
                         .enter().append("tr");
@@ -769,11 +772,11 @@
 
                       td.filter(function(d, i) { return i === 3})
                       .append("svg")
-                      .attr("class","svgg")
+                      .attr("class","bar_graph")
                       .attr("width", width)
                       .attr("height", barHeight * data_rent.length);
 
-                      var bar = d3.selectAll(".svgg").selectAll("g")
+                      var bar = d3.selectAll(".bar_graph").selectAll("g")
                         .data(data_rent)
                         .enter()
                         .append("g")
@@ -785,7 +788,8 @@
                          .attr("width", function(d) {
                                   return d.Median * scaleFactor;
                          })
-                         .attr("height", barHeight - 1);
+                         .attr("height", barHeight - 1)
+                         .attr("fill", "red");
 
                       bar.append("text")
                          .attr("x", function(d) { return (d.Median*scaleFactor); })
