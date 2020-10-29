@@ -544,15 +544,19 @@
                 function addtoSaved(d){
                   var newRow = {}
 
+                  var img_newRow = "";
+
                   if (d["Property Type"] == "Multi Family House"){
-                    newRow["Property Type"] = "MultiFamily.png";
+                    img_newRow = "MultiFamily.png";
                   } else if (d["Property Type"] == "Condo") {
-                    newRow["Property Type"] = "Condo.png";
+                    img_newRow = "Condo.png";
                   } else if (d["Property Type"] == "Single Family House"){
-                    newRow["Property Type"] = "SingleFamilyHouse.png";
+                    img_newRow = "SingleFamilyHouse.png";
                   } else{
-                    newRow["Property Type"] = "Townhouse.png";
+                    img_newRow = "Townhouse.png";
                   }
+
+                  newRow["Property Type"] = "";
 
                   newRow["Details"] =
                   "Size: " + d["Finished Size (Sq.Ft.)"] +
@@ -560,7 +564,10 @@
                   "Year Built: " + d["Year Built"] +
                   "Rent: " + d["Rent Amount"];
 
-                  newRow["Rent per Sq. Ft."] = "hi";
+                  newRow["Rent per Sq. Ft."] = "";
+                  newRow["Bedrooms"] = "";
+                  newRow["Bathroom"] = "";
+                  newRow["Button"] = "";
 
                   matrix.push(newRow)
 
@@ -569,10 +576,21 @@
                    .data(matrix)
                    .enter().append("tr");
 
-                  tr.selectAll("td").filter(function(d, i) { return i === 0})
+                 var td = tr.selectAll("td")
+                  .data(function(d, i) {
+                    return Object.values(d); })
+                  .enter()
                   .append("td")
+                  .text(function(d) { return d; });
+
+                  td.filter(function(d, i) { return i === 0})
                   .append("img")
-                  .attr('src', function(d) {return d["Property Type"];})
+                  .attr('src', img_newRow)
+                  .attr("class", "tableImgs");
+
+                  td.filter(function(d, i) { return i === 2})
+                  .append("img")
+                  .attr('src', img_newRow)
                   .attr("class", "tableImgs");
 
                  // var tdImg = tr.select("tr")
@@ -583,12 +601,6 @@
                  //  .attr('src', function(d) {return d["Property Type"];})
                  //  .attr("class", "tableImgs");
 
-                  // var td = tr.selectAll("td")
-                  //  .data(function(d, i) {
-                  //    return Object.values(d); })
-                  //  .enter()
-                  //  .append("td")
-                  //  .text(function(d) { return d; });
                    //
                    // var tdImg = tr.selectAll("td.tableImage")
                    // .data(function(d, i) {
