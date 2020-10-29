@@ -183,7 +183,7 @@
                 </div>
 
                 <div class="resetbutton">
-                    <button type="button" id="resetbutton" onclick='reset()'>Reset All Filters</button>
+                    <button type="button" id="resetbutton">Reset All Filters</button>
                 </div>
             </div>
 
@@ -364,10 +364,6 @@
                     var firstFilter = [];
                     var finalFilter = [];
 
-                    // allRentPrices
-                    // allPropertyTypes
-                    // allZipCodes
-
                     if (price_choices.length == 0) {
                         priceFilter = properties;
                     } else {
@@ -425,7 +421,7 @@
                     }
 
                     if (zip_choices.length == 0) {
-                        zipFilter = properties;
+                        zipFilter = firstFilter;
                     } else {
                         properties.forEach(function(prop, i) {
                             if (zip_choices.includes(prop['Zipcode'])) {
@@ -511,6 +507,8 @@
                     d3.selectAll(".selectZipCode").property("checked", false);
                     update()
                 }
+
+                //d3.selectAll("#resetbutton").attr("onclick", 'reset()');
 
                 //Mouseovers
                 circles.on("mouseover", function(d) {
