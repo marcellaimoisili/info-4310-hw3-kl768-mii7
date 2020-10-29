@@ -16,23 +16,23 @@
         .selectRentPrice text {
             margin-right: 15px;
         }
-        
+
         .selectZipCode,
         .selectPropertyType,
         .selectRentPrice {
             margin-right: 5px;
         }
-        
+
         .ZipCodeButton {
             margin-right: 15px;
             margin-bottom: 10px;
             margin-top: 10px;
         }
-        
+
         #resetbutton {
             margin-top: 30px;
         }
-        
+
         #propertyDetailsPanel {
             height: 463px;
             flex: 0 0 6em;
@@ -41,13 +41,13 @@
             background-color: #095499;
             color: white;
         }
-        
+
         #propertyDetailsPanel text {}
-        
+
         #flexPanel {
             display: flex;
         }
-        
+
         #filterPanel {
             height: 460px;
             padding: 20px;
@@ -56,21 +56,21 @@
             border: 2px solid #095499;
             flex: 0 0 42em;
         }
-        
+
         #filterPanel h3 {
             font-size: 20px;
             text-align: center;
             margin-top: 0px;
         }
-        
+
         #filterPanel h4 {
             font-size: 18px;
         }
-        
+
         #mapPanel {
             padding: 5px;
         }
-        
+
         .headerflex {
             background-color: #095499;
             padding: 10px;
@@ -83,48 +83,89 @@
             left: 0;
             right: 0;
         }
-        
+
         #headertitle {
             flex: 4;
         }
-        
+
         #headertitle h1 {
             text-align: left;
             margin-left: 20px;
             font-size: 40px;
         }
-        
+
         #headerdetails {
             text-align: right;
             padding-right: 10px;
             margin-top: 60px;
             flex: 1;
         }
-        
+
         #headerdetails h4 {
             margin: 0;
             font-style: italic;
             font-weight: normal;
         }
-        
+
         path {
             stroke: #153859;
             stroke-width: 0.5px;
             fill: #A5ACAF;
         }
-        
+
         .circlePoints {
             stroke: #153859;
         }
-        
+
         body {
             font-family: Helvetica;
             background: #f9f9f9;
         }
-        
+
         .introPanel {
             padding: 10px;
         }
+
+        #savedSearchPanel{
+          background-color: #dfe3e4;
+          margin: 0 auto;
+          height: 1000px;
+          left: 0;
+          right: 0;
+        }
+
+        #savedSearchHeader{
+          background-color: #095499;
+          height: 50px;
+          padding-left: 10px;
+          margin: 0 auto;
+          color: white;
+          left: 0;
+          right: 0;
+        }
+
+        #savedSearchHeader h2{
+          text-align: left;
+          margin-left: 20px;
+          padding-top: 10px;
+          font-size: 24px;
+        }
+
+        table, th, td {
+          border: 1px solid black;
+          table-layout: fixed;
+          width: 100%;
+        }
+
+        savedSearchTable td, th {
+          padding: 10px;
+          text-align: center;
+        }
+
+        .tableImage{
+          width: 90px;
+        }
+
     </style>
 </head>
 
@@ -190,7 +231,24 @@
         </div>
 
         <div id="savedSearchPanel">
+          <div id="savedSearchHeader">
             <h2>Saved Properties</h2>
+          </div>
+          <div id="savedSearchTablePanel">
+            <table class="savedSearchTable">
+               <thead>
+                 <tr>
+                   <th class="tableImage">Property Type</th>
+                   <th>Details</th>
+                   <th>Rent per Sq. Ft.</th>
+                   <th>Bedrooms</th>
+                   <th>Bathrooms</th>
+                   <th></th>
+                 </tr>
+               </thead>
+               <tbody></tbody>
+            </table>
+          </div>
         </div>
 
         <script>
@@ -498,6 +556,10 @@
 
                     let info = d3.select("#propertyDetailsPanel")
                         .style("opacity", 0.95);
+
+                    circles.on("dblclick",function(d){
+                      addtoSaved(d)
+                    });
                 }
 
                 //Resets all filters and displays all points
@@ -539,10 +601,69 @@
                 let info = d3.select("#propertyDetailsPanel")
                     .style("opacity", 0.95);
 
+                circles.on("dblclick",function(d){
+                  addtoSaved(d)
+                });
+
                 svg.append("g")
                     .attr("transform", "translate(500,10)");
 
-            }
+                    var matrix = []
+
+                    function addtoSaved(d){
+                      var newRow = {}
+
+                      var img_newRow = "";
+
+                      if (d["Property Type"] == "Multi Family House"){
+                        img_newRow = "MultiFamily.png";
+                      } else if (d["Property Type"] == "Condo") {
+                        img_newRow = "Condo.png";
+                      } else if (d["Property Type"] == "Single Family House"){
+                        img_newRow = "SingleFamilyHouse.png";
+                      } else{
+                        img_newRow = "Townhouse.png";
+                      }
+
+                      newRow["Property Type"] = "";
+
+                      newRow["Details"] =
+                      "Size: " + d["Finished Size (Sq.Ft.)"] +
+                      "Neighborhood: " + d["Neighborhood"] +
+                      "Year Built: " + d["Year Built"] +
+                      "Rent: " + d["Rent Amount"];
+
+                      newRow["Rent per Sq. Ft."] = "";
+                      newRow["Bedrooms"] = "";
+                      newRow["Bathroom"] = "";
+                      newRow["Button"] = "";
+
+                      matrix.push(newRow)
+
+                      var tr = d3.select(".savedSearchTable tbody")
+                       .selectAll("tr")
+                       .data(matrix)
+                       .enter().append("tr");
+
+                     var td = tr.selectAll("td")
+                      .data(function(d, i) {
+                        return Object.values(d); })
+                      .enter()
+                      .append("td")
+                      .text(function(d) { return d; });
+
+                      td.filter(function(d, i) { return i === 0})
+                      .append("img")
+                      .attr('src', img_newRow)
+                      .attr("class", "tableImgs");
+
+                      td.filter(function(d, i) { return i === 2})
+                      .append("img")
+                      .attr('src', img_newRow)
+                      .attr("class", "tableImgs");
+
+                    }
+                }
             requestData();
         </script>
     </div>
