@@ -172,6 +172,11 @@
         .tableButton {
             width: 90px;
         }
+
+        .savedPropertiesText{
+          text-align: center;
+        }
+
     </style>
 </head>
 
@@ -674,17 +679,9 @@
                     }
 
                     newRow["Property Type"] = "";
-
-                    newRow["Location"] = "Address: " + d["Street Address"] + "\n" +
-                    "Neighborhood: " + d["Neighborhood"] + "\n";
-
-                    newRow["Details"] =
-                        "Size: " + d["Finished Size (Sq.Ft.)"] + " Sq. Ft. \n" +
-                        "Year Built: " + d["Year Built"] + "\n" +
-                        "Rent: " + d["Rent Amount"];
-
+                    newRow["Location"] = "";
+                    newRow["Details"] = "";
                     newRow["Rent per Sq. Ft."] = "";
-
                     newRow["Remove"] = "";
 
                     matrix.push(newRow)
@@ -706,6 +703,29 @@
 
                     td.filter(function(d, i) {
                             return i === 0
+                        })
+                        .append("img")
+                        .attr('src', img_newRow)
+                        .attr("class", "tableImgs");
+
+                    td.filter(function(d, i) {
+                            return i === 1
+                        })
+                        .attr("class","savedPropertiesText")
+                        .html("<p><b>Address: </b>" + d["Street Address"] + "</p>" +
+                        "<p><b>Neighborhood: </b>" + d["Neighborhood"] + "</p>" +
+                        "<p><b>Zip Code: </b>" + d["Zipcode"] + "</p>");
+
+                    td.filter(function(d, i) {
+                            return i === 2
+                        })
+                        .attr("class","savedPropertiesText")
+                        .html("<p><b>Size: </b>" + d["Finished Size (Sq.Ft.)"] + " Sq. Ft. </p>" +
+                        "<p><b>Year Built: </b>" + d["Year Built"] + "</p>" +
+                        "<p><b>Rent: </b>" + d["Rent Amount"]);
+
+                    td.filter(function(d, i) {
+                            return i === 4
                         })
                         .append("img")
                         .attr('src', img_newRow)
