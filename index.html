@@ -71,32 +71,30 @@
 
         .headerflex {
             background-color: #095499;
+            height: 100px;
             padding: 10px;
             margin: 0 auto;
-            display: flex;
             color: white;
             z-index: 1000;
             position: fixed;
+            display: flex;
             top: 0;
             left: 0;
             right: 0;
         }
 
-        #headertitle {
-            flex: 4;
-        }
-
         #headertitle h1 {
+            flex: 2;
             text-align: left;
             margin-left: 20px;
             font-size: 40px;
         }
 
         #headerdetails {
+            flex: 1;
             text-align: right;
             padding-right: 10px;
             margin-top: 60px;
-            flex: 1;
         }
 
         #headerdetails h4 {
@@ -122,12 +120,11 @@
 
         .introPanel {
             padding: 10px;
+            padding-top: 110px;
         }
 
         #savedSearchPanel {
-            background-color: #dfe3e4;
             margin: 0 auto;
-            height: 1000px;
             left: 0;
             right: 0;
         }
@@ -157,6 +154,10 @@
             width: 100%;
         }
 
+        #savedSearchTable{
+          background-color: #dfe3e4;
+        }
+
         #savedSearchTable td,th {
             padding: 10px;
             text-align: center;
@@ -178,11 +179,6 @@
             text-align: center;
         }
 
-        tr,
-        td {
-            color: #dfe3e4;
-        }
-
         th {
             color: black;
         }
@@ -195,6 +191,97 @@
         #checkBoxZipCodeDiv {
             padding-bottom: 2vh;
         }
+
+        .propertyIconLegend{
+          width: 50px;
+          height: 50px;
+          padding: 10px;
+        }
+
+        #propertyDiv{
+          display: flex;
+          width: 700px;
+          height: 120px;
+          padding-left: 30px;
+        }
+
+        .propertyIconDiv h5{
+          text-align: center;
+          width: 50px;
+          padding: 10px;
+          margin-top: -20px;
+        }
+
+        .flexLegTitles{
+          display: flex;
+          width: 700px;
+          padding-left: 30px;
+        }
+
+        #propertyLegTitle{
+          margin: 0 auto;
+          padding-right: 20px;
+          padding-top: 10px;
+          padding-bottom: 10px;
+        }
+
+        #propertyLegTitle2{
+          margin: 0 auto;
+          padding-right: 60px;
+          padding-top: 10px;
+          padding-bottom: 10px;
+        }
+
+        .propertyButtonsDiv{
+          margin-left: 20px;
+        }
+
+        .propertyBarDiv{
+          display: flex;
+          height: 120px;
+          width: 350px;
+          padding-left: 100px;
+          padding-right: 20px;
+        }
+
+        .propertyBarColorDiv h5{
+          width: 50px;
+          padding-left: 10px;
+          padding-right: 10px;
+          margin-top: 0px;
+          margin-right: 0px;
+          text-align: center;
+        }
+
+        .propertyBarColorDiv svg{
+          margin-left: 10px;
+        }
+
+        .propertyButtonsDiv button{
+          margin-left: 30px;
+          background-color: #095499;
+          color: white;
+          font-size: 18px;
+          padding: 20px;
+          height: 110px;
+          width: 100px;
+          margin-top: -15px;
+          font-weight: bold;
+        }
+
+        .propertyButtonsDiv{
+          display: flex;
+        }
+
+        #saveInstructions{
+          margin: 0 auto;
+          padding: 20px;
+        }
+
+        #introParagraph{
+          color: #104678;
+        }
+
     </style>
 </head>
 
@@ -210,7 +297,25 @@
     </div>
     <div class="introPanel">
         <h3><strong>An interactive tool for the Zillow Pittsburgh home database.</strong></h3>
-        <p>How to Use:</p>
+        <p id="introParagraph"><b>Pittsburgh RentFinder is a visualization tool that seeks to help people easily explore and compare homes they are interested in.
+          With features such as filtering, viewing specific home details, saving properties, and comparing rent prices per square feet across neighborhoods and the city as a whole,
+          Pittsburgh RentFinder is a user-friendly tool for finding properties to rent.
+          The map of Pittsburgh includes circles that are positioned at locations, where properties are available for rent.
+          Each circle's size and color reflects the property's size (square feet).</b></p>
+        <ol>
+        <li>To <b>narrow down</b> homes based on preferences, check filters based on rent price, property type, and zipcode preferences.</li>
+        <li>To <b>undo</b> your filters, press Reset All Filters to view the whole dataset of homes again.</li>
+        <li>To <b>view more information</b> about a specific property, hover over a dot on the map to display detailed data. </li>
+        <li>To <b>save</b> a specific property to your Saved Properties Table, click on a dot.</li>
+        <li>To <b>remove</b> properties from your list of saved properties, click Undo Last Saved to remove the last entry in your list or click Clear Saved List to start over.</li>
+        <li>To <b>compare</b> saved properties, reference the bar graph to understand how a property's rent per square feet compares to the median rent per square feet in its neighborhood and in Pittsburgh.</li>
+        </ol>
+        <em>Note that:</em>
+        <ul>
+            <li>Green bar graphs indicate that the rent per square feet is greater than both the neighborhood and city median.</li>
+            <li>Yellow bar graphs indicate that the rent per square feet is between the neighborhood and city median.</li>
+            <li>Red bar graphs indicate that the rent per square feet is less than both the neighborhood and city median.</li>
+        </ul>
     </div>
     <div id='p1'>
         <div id="flexPanel">
@@ -252,6 +357,48 @@
             <div id="savedSearchHeader">
                 <h2>Saved Properties</h2>
             </div>
+
+            <div class = "flexLegTitles">
+              <h4 id = "propertyLegTitle">Property Types Legend:</h4>
+              <h4 id = "propertyLegTitle2">Rent Per Sq.Ft. Legend:</h4>
+            </div>
+            <div id="propertyDiv">
+              <div class="propertyIconDiv">
+                <img src="SingleFamilyHouse.png" alt="Single Family House" class="propertyIconLegend">
+                <h5>Single Family House</h5>
+              </div>
+              <div class="propertyIconDiv">
+                <img src="MultiFamily.png" alt="Multi Family House" class="propertyIconLegend">
+                <h5>Multi Family House</h5>
+              </div>
+              <div class="propertyIconDiv">
+                <img src="Condo.png" alt="Condo" class="propertyIconLegend">
+                <h5>Condo</h5>
+              </div>
+              <div class="propertyIconDiv">
+                <img src="Townhouse.png" alt="Townhouse" class="propertyIconLegend">
+                <h5>Townhouse</h5>
+              </div>
+              <div class="propertyBarDiv">
+                <div class="propertyBarColorDiv">
+                  <svg width="50" height="50"><rect width="50" height="50" style="fill:#068021"/></svg>
+                  <h5>Good Rent Median</h5>
+                </div>
+                <div class="propertyBarColorDiv">
+                  <svg width="50" height="50"><rect width="50" height="50" style="fill:#d2b122"/></svg>
+                  <h5>Average Rent Median</h5>
+                </div>
+                <div class="propertyBarColorDiv">
+                  <svg width="50" height="50"><rect width="50" height="50" style="fill:#ab1414"/></svg>
+                  <h5>Poor Rent Median</h5>
+                </div>
+              </div>
+              <div class="propertyButtonsDiv">
+                <button type="button" id="undoSavedButton">Undo Last Saved</button>
+                <button type="button" id="clearSavedButton">Clear Saved List</button>
+              </div>
+            </div>
+            <h3 id="saveInstructions"><em>To add a property to your Saved Properties table, click on a dot on the map!</em></h3>
             <div id="savedSearchTablePanel">
                 <table id="savedSearchTable">
                     <thead>
@@ -260,7 +407,6 @@
                             <th>Location</th>
                             <th>Details</th>
                             <th>Rent per Sq. Ft.</th>
-                            <th class="tableButton">Remove</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -595,12 +741,12 @@
                             .attr('stroke-width', '4')
                             .attr("radius", 5); //not sure if this is working
                         info.transition()
-                        info.html("<p><b>" + "Size: " + "</b>" + d["Finished Size (Sq.Ft.)"] + "</p>" +
+                        info.html("<p><b>" + "Size: " + "</b>" + d["Finished Size (Sq.Ft.)"] + " Sq.Ft.</p>" +
                             "<p><b>" + "Property Type: " + "</b>" + d["Property Type"] + "</p>" +
                             "<p><b>" + "Neighborhood: " + "</b>" + d["Neighborhood"] + "</p>" +
                             "<p><b>" + "Year Built: " + "</b>" + d["Year Built"] + "</p>" +
-                            "<p><b>" + "Rent: " + "</b>" + d["Rent Amount"] + "</p>" +
-                            "<p><b>" + "Rent per Sq.Ft.: " + "</b>" + d["Rent-to-Finished Size Ratio"] + "</p>" +
+                            "<p><b>" + "Rent: " + "</b> $" + d["Rent Amount"] + "</p>" +
+                            "<p><b>" + "Rent per Sq.Ft.: " + "</b> $" + d["Rent-to-Finished Size Ratio"] + "</p>" +
                             "<p><b>" + "Bedrooms: " + "</b>" + d["Bedrooms"] + "</p>" +
                             "<p><b>" + "Bathrooms: " + "</b>" + d["Bathroom"] + "</p>")
                     });
@@ -649,12 +795,12 @@
                         .attr('stroke-width', '4')
                         .attr("radius", 5); //not sure if this is working
                     info.transition()
-                    info.html("<p><b>" + "Size: " + "</b>" + d["Finished Size (Sq.Ft.)"] + "</p>" +
+                    info.html("<p><b>" + "Size: " + "</b>" + d["Finished Size (Sq.Ft.)"] + " Sq.Ft.</p>" +
                         "<p><b>" + "Property Type: " + "</b>" + d["Property Type"] + "</p>" +
                         "<p><b>" + "Neighborhood: " + "</b>" + d["Neighborhood"] + "</p>" +
                         "<p><b>" + "Year Built: " + "</b>" + d["Year Built"] + "</p>" +
-                        "<p><b>" + "Rent: " + "</b>" + d["Rent Amount"] + "</p>" +
-                        "<p><b>" + "Rent per Sq.Ft.: " + "</b>" + d["Rent-to-Finished Size Ratio"] + "</p>" +
+                        "<p><b>" + "Rent: " + "</b> $" + d["Rent Amount"] + "</p>" +
+                        "<p><b>" + "Rent per Sq.Ft.: " + "</b> $" + d["Rent-to-Finished Size Ratio"] + "</p>" +
                         "<p><b>" + "Bedrooms: " + "</b>" + d["Bedrooms"] + "</p>" +
                         "<p><b>" + "Bathrooms: " + "</b>" + d["Bathroom"] + "</p>")
                 });
@@ -696,11 +842,10 @@
                         img_newRow = "Townhouse.png";
                     }
 
-                    newRow["Property Type"] = d["ZPID"];
+                    newRow["Property Type"] = "";
                     newRow["Location"] = "";
                     newRow["Details"] = "";
                     newRow["Rent per Sq. Ft."] = "";
-                    newRow["Remove"] = "";
 
                     matrix.push(newRow)
 
@@ -742,33 +887,34 @@
                             "<p><b>Year Built: </b>" + d["Year Built"] + "</p>" +
                             "<p><b>Rent: </b>$" + d["Rent Amount"] + " per month");
 
-                    td.filter(function(k, i) {
-                            return i === 4
-                        })
-                        .attr("class", "removeSavedButton")
-                        .append("button")
-                        .text("Remove")
-                        .on("click", function(k) {
-                            removeSaved(this)
-                        });
-
                     data_rent = []
+                    propertyRentMed = d["Rent-to-Finished Size Ratio"]
+                    neighRentMed = rentSqFtNeighMed[d["Neighborhood"]]
                     data_rent.push({
                         Type: "Property",
-                        Median: d["Rent-to-Finished Size Ratio"]
+                        Median: propertyRentMed
                     })
                     data_rent.push({
                         Type: "Neighborhood",
-                        Median: rentSqFtNeighMed[d["Neighborhood"]]
+                        Median: neighRentMed
                     })
                     data_rent.push({
                         Type: "City",
                         Median: cityRentMed
                     })
 
-                      var width = 200,
-                      scaleFactor = 60,
-                      barHeight = 20;
+                    var bar_color;
+                    if(propertyRentMed > neighRentMed && propertyRentMed > cityRentMed){
+                      bar_color = "#068021"
+                    } else if(propertyRentMed > neighRentMed || propertyRentMed > cityRentMed){
+                      bar_color = "#d2b122"
+                    } else{
+                      bar_color = "#ab1414"
+                    }
+
+                      var width = 600,
+                      scaleFactor = 150,
+                      barHeight = 50;
 
                       td.filter(function(d, i) { return i === 3})
                       .append("svg")
@@ -784,22 +930,39 @@
                               return "translate(0," + i * barHeight + ")";
                         });
 
+                        bar.append("text")
+                           .attr("x", function(d) { return (d.Median*scaleFactor); })
+                           .attr("y", barHeight / 2)
+                           .attr("dy", ".35em")
+                           .text(function(d) { return d.Type + " ($" + d.Median +")"; });
+
                       bar.append("rect")
                          .attr("width", function(d) {
                                   return d.Median * scaleFactor;
                          })
                          .attr("height", barHeight - 1)
-                         .attr("fill", "red");
-
-                      bar.append("text")
-                         .attr("x", function(d) { return (d.Median*scaleFactor); })
-                         .attr("y", barHeight / 2)
-                         .attr("dy", ".35em")
-                         .text(function(d) { return d.Type; });
+                         .attr("fill", bar_color);
                     }
 
-                    function undoLastRow(lastRow){
-                      document.getElementById('savedSearchTable').rows[lastRow].remove();
+                    d3.select("#undoSavedButton").on("click", function(d) {
+                      undoLastRow()
+                    });
+                    d3.select("#clearSavedButton").on("click", function(d) {
+                      clearSaved()
+                    });
+
+                    function undoLastRow(){
+                      if(matrix.length>0){
+                        document.getElementById('savedSearchTable').rows[matrix.length].remove();
+                        matrix.pop()
+                      }
+                    }
+
+                    function clearSaved(){
+                      for(i=matrix.length; i<=matrix.length && i>0; i--){
+                        document.getElementById('savedSearchTable').rows[i].remove();
+                        matrix.pop()
+                      }
                     }
 
                 // Creating the Legend
