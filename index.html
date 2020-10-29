@@ -163,7 +163,7 @@
         }
 
         .tableImage {
-            width: 100px;
+            width: 90px;
         }
 
         .tableButton {
@@ -250,7 +250,7 @@
                 <h2>Saved Properties</h2>
             </div>
             <div id="savedSearchTablePanel">
-                <table id="savedSearchTable">
+                <table class="savedSearchTable">
                     <thead>
                         <tr>
                             <th class="tableImage">Property Type</th>
@@ -693,7 +693,7 @@
                         img_newRow = "Townhouse.png";
                     }
 
-                    newRow["Property Type"] = "";
+                    newRow["Property Type"] = d["ZPID"];
                     newRow["Location"] = "";
                     newRow["Details"] = "";
                     newRow["Rent per Sq. Ft."] = "";
@@ -701,7 +701,7 @@
 
                     matrix.push(newRow)
 
-                    var tr = d3.select("#savedSearchTable tbody")
+                    var tr = d3.select(".savedSearchTable tbody")
                         .selectAll("tr")
                         .data(matrix)
                         .enter().append("tr");
