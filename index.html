@@ -16,23 +16,23 @@
         .selectRentPrice text {
             margin-right: 15px;
         }
-
+        
         .selectZipCode,
         .selectPropertyType,
         .selectRentPrice {
             margin-right: 5px;
         }
-
+        
         .ZipCodeButton {
             margin-right: 15px;
             margin-bottom: 10px;
             margin-top: 10px;
         }
-
+        
         #resetbutton {
             margin-top: 30px;
         }
-
+        
         #propertyDetailsPanel {
             height: 463px;
             flex: 0 0 6em;
@@ -41,11 +41,11 @@
             background-color: #095499;
             color: white;
         }
-
+        
         #flexPanel {
             display: flex;
         }
-
+        
         #filterPanel {
             height: 460px;
             padding: 20px;
@@ -54,21 +54,21 @@
             border: 2px solid #095499;
             flex: 0 0 42em;
         }
-
+        
         #filterPanel h3 {
             font-size: 20px;
             text-align: center;
             margin-top: 0px;
         }
-
+        
         #filterPanel h4 {
             font-size: 18px;
         }
-
+        
         #mapPanel {
             padding: 5px;
         }
-
+        
         .headerflex {
             background-color: #095499;
             padding: 10px;
@@ -81,49 +81,49 @@
             left: 0;
             right: 0;
         }
-
+        
         #headertitle {
             flex: 4;
         }
-
+        
         #headertitle h1 {
             text-align: left;
             margin-left: 20px;
             font-size: 40px;
         }
-
+        
         #headerdetails {
             text-align: right;
             padding-right: 10px;
             margin-top: 60px;
             flex: 1;
         }
-
+        
         #headerdetails h4 {
             margin: 0;
             font-style: italic;
             font-weight: normal;
         }
-
+        
         path {
             stroke: #153859;
             stroke-width: 0.5px;
             fill: #A5ACAF;
         }
-
+        
         .circlePoints {
             stroke: #153859;
         }
-
+        
         body {
             font-family: Helvetica;
             background: #f9f9f9;
         }
-
+        
         .introPanel {
             padding: 10px;
         }
-
+        
         #savedSearchPanel {
             background-color: #dfe3e4;
             margin: 0 auto;
@@ -131,7 +131,7 @@
             left: 0;
             right: 0;
         }
-
+        
         #savedSearchHeader {
             background-color: #095499;
             height: 50px;
@@ -141,14 +141,14 @@
             left: 0;
             right: 0;
         }
-
+        
         #savedSearchHeader h2 {
             text-align: left;
             margin-left: 20px;
             padding-top: 10px;
             font-size: 24px;
         }
-
+        
         table,
         th,
         td {
@@ -156,38 +156,42 @@
             table-layout: fixed;
             width: 100%;
         }
-
+        
         savedSearchTable td,
         th {
             padding: 10px;
             text-align: center;
         }
-
+        
         .tableImage {
             width: 90px;
         }
-
+        
         .tableButton {
             width: 90px;
         }
-
-        .removeSavedButton{
-          text-align: center;
+        
+        .removeSavedButton {
+            text-align: center;
         }
-
-        tr, td{
-          color: #dfe3e4;
+        
+        tr,
+        td {
+            color: #dfe3e4;
         }
-
-        th{
-          color: black;
+        
+        th {
+            color: black;
         }
-
-        .savedPropertiesText{
-          text-align: center;
-          color: black;
+        
+        .savedPropertiesText {
+            text-align: center;
+            color: black;
         }
-
+        
+        #checkBoxZipCodeDiv {
+            padding-bottom: 2vh;
+        }
     </style>
 </head>
 
@@ -231,7 +235,7 @@
                 <div class="selectZipCode">
                     <h4>Zip Code</h4>
                     <div id="checkBoxZipCodeDiv"></div>
-                    <button type='button' class="ZipCodeButton1">Check All Zip Codes</button>
+                    <!-- <button type='button' class="ZipCodeButton1">Check All Zip Codes</button> we decided this button was unnecessary with our new/final filter implementation -->
                     <button type='button' class="ZipCodeButton2">Uncheck All Zip Codes </button>
                 </div>
 
@@ -311,37 +315,37 @@
                         allRentValues.push(d['Rent Amount'])
                     }
                     cityRentSqFtTotal += parseFloat(d['Rent-to-Finished Size Ratio'])
-                    if (!neighList.includes(d['Neighborhood'])){
-                      neighList.push(d['Neighborhood'])
+                    if (!neighList.includes(d['Neighborhood'])) {
+                        neighList.push(d['Neighborhood'])
                     }
-                    if (!(d["Neighborhood"] in neighCounts)){
-                      neighCounts[d["Neighborhood"]] = 1
-                    } else{
-                      neighCounts[d["Neighborhood"]] += 1
+                    if (!(d["Neighborhood"] in neighCounts)) {
+                        neighCounts[d["Neighborhood"]] = 1
+                    } else {
+                        neighCounts[d["Neighborhood"]] += 1
                     }
                 });
 
-                var cityRentMed = (cityRentSqFtTotal/properties.length).toFixed(2)
+                var cityRentMed = (cityRentSqFtTotal / properties.length).toFixed(2)
                 var rentSqFtNeighMed = {}
 
-                for(i=0; i<properties.length; i++){
-                  for(j=0; j<neighList.length; j++){
-                    if(properties[i]["Neighborhood"]==neighList[j]){
-                      if(!(neighList[j] in rentSqFtNeighMed)){
-                        rentSqFtNeighMed[neighList[j]] = parseFloat(properties[i]['Rent-to-Finished Size Ratio'])
-                      }else{
-                        rentSqFtNeighMed[neighList[j]] += parseFloat(properties[i]['Rent-to-Finished Size Ratio'])
-                      }
+                for (i = 0; i < properties.length; i++) {
+                    for (j = 0; j < neighList.length; j++) {
+                        if (properties[i]["Neighborhood"] == neighList[j]) {
+                            if (!(neighList[j] in rentSqFtNeighMed)) {
+                                rentSqFtNeighMed[neighList[j]] = parseFloat(properties[i]['Rent-to-Finished Size Ratio'])
+                            } else {
+                                rentSqFtNeighMed[neighList[j]] += parseFloat(properties[i]['Rent-to-Finished Size Ratio'])
+                            }
+                        }
                     }
-                  }
                 }
 
                 for (var key in rentSqFtNeighMed) {
-                  for (var key2 in neighCounts) {
-                    if(key==key2){
-                      rentSqFtNeighMed[key] = (rentSqFtNeighMed[key]/neighCounts[key2]).toFixed(2)
+                    for (var key2 in neighCounts) {
+                        if (key == key2) {
+                            rentSqFtNeighMed[key] = (rentSqFtNeighMed[key] / neighCounts[key2]).toFixed(2)
+                        }
                     }
-                  }
                 }
 
                 allZipCodes.sort();
@@ -431,9 +435,10 @@
                     reset()
                 });
 
-                d3.selectAll('.ZipCodeButton1').on("click", function(d) {
-                    checkAllZipCodes()
-                });
+                // d3.selectAll('.ZipCodeButton1').on("click", function(d) {
+                //     checkAllZipCodes()
+                // });
+
                 d3.selectAll('.ZipCodeButton2').on("click", function(d) {
                     uncheckAllZipCodes()
                 });
@@ -722,18 +727,18 @@
                     td.filter(function(d, i) {
                             return i === 1
                         })
-                        .attr("class","savedPropertiesText")
+                        .attr("class", "savedPropertiesText")
                         .html("<p><b>Address: </b>" + d["Street Address"] + "</p>" +
-                        "<p><b>Neighborhood: </b>" + d["Neighborhood"] + "</p>" +
-                        "<p><b>Zip Code: </b>" + d["Zipcode"] + "</p>");
+                            "<p><b>Neighborhood: </b>" + d["Neighborhood"] + "</p>" +
+                            "<p><b>Zip Code: </b>" + d["Zipcode"] + "</p>");
 
                     td.filter(function(d, i) {
                             return i === 2
                         })
-                        .attr("class","savedPropertiesText")
+                        .attr("class", "savedPropertiesText")
                         .html("<p><b>Size: </b>" + d["Finished Size (Sq.Ft.)"] + " Sq. Ft. </p>" +
-                        "<p><b>Year Built: </b>" + d["Year Built"] + "</p>" +
-                        "<p><b>Rent: </b>$" + d["Rent Amount"] + " per month");
+                            "<p><b>Year Built: </b>" + d["Year Built"] + "</p>" +
+                            "<p><b>Rent: </b>$" + d["Rent Amount"] + " per month");
 
                     td.filter(function(k, i) {
                             return i === 4
@@ -741,95 +746,121 @@
                         .attr("class", "removeSavedButton")
                         .append("button")
                         .text("Remove")
-                        .on("click", function(k){ removeSaved(this)});
+                        .on("click", function(k) {
+                            removeSaved(this)
+                        });
 
-                      data_rent = []
-                      data_rent.push({Type:"Property",Median:d["Rent-to-Finished Size Ratio"]})
-                      data_rent.push({Type:"Neighborhood",Median:rentSqFtNeighMed[d["Neighborhood"]]})
-                      data_rent.push({Type:"City",Median:cityRentMed})
+                    data_rent = []
+                    data_rent.push({
+                        Type: "Property",
+                        Median: d["Rent-to-Finished Size Ratio"]
+                    })
+                    data_rent.push({
+                        Type: "Neighborhood",
+                        Median: rentSqFtNeighMed[d["Neighborhood"]]
+                    })
+                    data_rent.push({
+                        Type: "City",
+                        Median: cityRentMed
+                    })
 
-                      td.filter(function(d, i) { return i === 3})
-                      .append("svg")
-                      .attr("class", "bargraph_rent");
+                    td.filter(function(d, i) {
+                            return i === 3
+                        })
+                        .append("svg")
+                        .attr("class", "bargraph_rent");
 
-                      var bar_width = 100;
-                      var bar_height = 100;
-                      var margin = {top: 5, right: 5, bottom: 10, left: 8}
+                    var bar_width = 100;
+                    var bar_height = 100;
+                    var margin = {
+                        top: 5,
+                        right: 5,
+                        bottom: 10,
+                        left: 8
+                    }
 
-                      d3.selectAll("svg.bargraph_rent")
-                          .append("svg")
-                          .attr("class","bargraph_rent")
-                          .attr("width", bar_width + margin.left + margin.right)
-                          .attr("height", bar_height + margin.top + margin.bottom)
+                    d3.selectAll("svg.bargraph_rent")
+                        .append("svg")
+                        .attr("class", "bargraph_rent")
+                        .attr("width", bar_width + margin.left + margin.right)
+                        .attr("height", bar_height + margin.top + margin.bottom)
                         .append("g")
-                          .attr("transform",
-                                "translate(" + margin.left + "," + margin.top + ")");
+                        .attr("transform",
+                            "translate(" + margin.left + "," + margin.top + ")");
 
-                      var rent_bar_x = d3.scaleBand()
-                                      .domain(data_rent.map(function(d) { return d.Type; }))
-                                      .range([ 0, width ])
-                                      .padding(0.2);
+                    var rent_bar_x = d3.scaleBand()
+                        .domain(data_rent.map(function(d) {
+                            return d.Type;
+                        }))
+                        .range([0, width])
+                        .padding(0.2);
 
-                      d3.selectAll("svg.bargraph_rent").append("g")
+                    d3.selectAll("svg.bargraph_rent").append("g")
                         .attr("transform", "translate(0," + bar_height + ")")
                         .call(d3.axisBottom(rent_bar_x))
                         .selectAll("text")
-                          .attr("transform", "translate(-10,0)rotate(-45)")
-                          .style("text-anchor", "end");
+                        .attr("transform", "translate(-10,0)rotate(-45)")
+                        .style("text-anchor", "end");
 
-                      var rent_bar_y = d3.scaleLinear()
-                                      .domain([0,2])
-                                      .range([bar_height, 0]);
+                    var rent_bar_y = d3.scaleLinear()
+                        .domain([0, 2])
+                        .range([bar_height, 0]);
 
-                      d3.selectAll("svg.bargraph_rent").append("g")
-                          .call(d3.axisLeft(rent_bar_y));
+                    d3.selectAll("svg.bargraph_rent").append("g")
+                        .call(d3.axisLeft(rent_bar_y));
 
-                      d3.selectAll("svg.bargraph_rent")
+                    d3.selectAll("svg.bargraph_rent")
                         .data(data_rent)
                         .enter()
                         .append("rect")
-                          .attr("x", function(d) { return rent_bar_x(d.Type); })
-                          .attr("y", function(d) { return rent_bar_y(d.Median); })
-                          .attr("width", rent_bar_x.bandwidth())
-                          .attr("height", function(d) { return bar_height - rent_bar_y(d.Median); })
-                          .attr("fill", "#69b3a2")
-                    }
+                        .attr("x", function(d) {
+                            return rent_bar_x(d.Type);
+                        })
+                        .attr("y", function(d) {
+                            return rent_bar_y(d.Median);
+                        })
+                        .attr("width", rent_bar_x.bandwidth())
+                        .attr("height", function(d) {
+                            return bar_height - rent_bar_y(d.Median);
+                        })
+                        .attr("fill", "#69b3a2")
+                }
 
-                    function removeSaved(rowNum){
-                      rowNum.remove();
-                    }
+                function removeSaved(rowNum) {
+                    rowNum.remove();
+                }
 
-                    // Creating the Legend
-                      // scatterLeg.append("g")
-                      //   .attr("class", "legend-title")
-                      //   .append("text")
-                      //   .text("Year Released")
-                      //   .attr("x",10)
-                      //   .attr("y",15)
-                      //   .style("font-weight","bold")
-                      //   .style("text-anchor","start");
-                      //
-                      // var legend = scatterLeg.selectAll()
-                      // .data(["1900s","1910s","1920s","1930s","1940s","1950s","1960s","1970s","1980s","1990s","2000s","2010s","2020s"])
-                      // .enter().append("g")
-                      // .attr("class", "legend")
-                      // .attr("transform", function(d, i) { return "translate(10," + i * 22 +")"; });
-                      //
-                      // // Draw Colored Circles in the Legend
-                      // legend.append("circle")
-                      //      .attr("cx", 27)
-                      //      .attr("cy", 35)
-                      //      .attr("r", 5)
-                      //      .style("fill", function(d){return yearColorScale(d)})
-                      //      .attr("transform", function(d, i) { return "translate(0," + i * -0.05 + ")"; });
-                      //
-                      // // Add Corresponding Text in the Legend
-                      // legend.append("text")
-                      //      .attr("x", 37)
-                      //      .attr("y", 35)
-                      //      .attr("dy", ".35em")
-                      //      .style("text-anchor", "start")
-                      //      .text(function(d) { return d;});
+                // Creating the Legend
+                // scatterLeg.append("g")
+                //   .attr("class", "legend-title")
+                //   .append("text")
+                //   .text("Year Released")
+                //   .attr("x",10)
+                //   .attr("y",15)
+                //   .style("font-weight","bold")
+                //   .style("text-anchor","start");
+                //
+                // var legend = scatterLeg.selectAll()
+                // .data(["1900s","1910s","1920s","1930s","1940s","1950s","1960s","1970s","1980s","1990s","2000s","2010s","2020s"])
+                // .enter().append("g")
+                // .attr("class", "legend")
+                // .attr("transform", function(d, i) { return "translate(10," + i * 22 +")"; });
+                //
+                // // Draw Colored Circles in the Legend
+                // legend.append("circle")
+                //      .attr("cx", 27)
+                //      .attr("cy", 35)
+                //      .attr("r", 5)
+                //      .style("fill", function(d){return yearColorScale(d)})
+                //      .attr("transform", function(d, i) { return "translate(0," + i * -0.05 + ")"; });
+                //
+                // // Add Corresponding Text in the Legend
+                // legend.append("text")
+                //      .attr("x", 37)
+                //      .attr("y", 35)
+                //      .attr("dy", ".35em")
+                //      .style("text-anchor", "start")
+                //      .text(function(d) { return d;});
                 // }
             }
             requestData();
