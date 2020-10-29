@@ -42,8 +42,6 @@
             color: white;
         }
 
-        #propertyDetailsPanel text {}
-
         #flexPanel {
             display: flex;
         }
@@ -173,8 +171,21 @@
             width: 90px;
         }
 
+        .removeSavedButton{
+          text-align: center;
+        }
+
+        tr, td{
+          color: #dfe3e4;
+        }
+
+        th{
+          color: black;
+        }
+
         .savedPropertiesText{
           text-align: center;
+          color: black;
         }
 
     </style>
@@ -678,7 +689,7 @@
                         img_newRow = "Townhouse.png";
                     }
 
-                    newRow["Property Type"] = "";
+                    newRow["Property Type"] = d["ZPID"];
                     newRow["Location"] = "";
                     newRow["Details"] = "";
                     newRow["Rent per Sq. Ft."] = "";
@@ -722,14 +733,15 @@
                         .attr("class","savedPropertiesText")
                         .html("<p><b>Size: </b>" + d["Finished Size (Sq.Ft.)"] + " Sq. Ft. </p>" +
                         "<p><b>Year Built: </b>" + d["Year Built"] + "</p>" +
-                        "<p><b>Rent: </b>" + d["Rent Amount"]);
+                        "<p><b>Rent: </b>$" + d["Rent Amount"] + " per month");
 
-                    td.filter(function(d, i) {
+                    td.filter(function(k, i) {
                             return i === 4
                         })
-                        .append("img")
-                        .attr('src', img_newRow)
-                        .attr("class", "tableImgs");
+                        .attr("class", "removeSavedButton")
+                        .append("button")
+                        .text("Remove")
+                        .on("click", function(k){ removeSaved(this)});
 
                       data_rent = []
                       data_rent.push({Type:"Property",Median:d["Rent-to-Finished Size Ratio"]})
@@ -781,6 +793,10 @@
                           .attr("width", rent_bar_x.bandwidth())
                           .attr("height", function(d) { return bar_height - rent_bar_y(d.Median); })
                           .attr("fill", "#69b3a2")
+                    }
+
+                    function removeSaved(rowNum){
+                      rowNum.remove();
                     }
 
                     // Creating the Legend
