@@ -156,20 +156,15 @@
             table-layout: fixed;
             width: 100%;
         }
-<<<<<<< Updated upstream
         
-        savedSearchTable td,
-=======
-
         #savedSearchTable td,
->>>>>>> Stashed changes
         th {
             padding: 10px;
             text-align: center;
         }
         
         .tableImage {
-            width: 100px;
+            width: 90px;
         }
         
         .tableButton {
@@ -179,7 +174,6 @@
         .removeSavedButton {
             text-align: center;
         }
-<<<<<<< Updated upstream
         
         tr,
         td {
@@ -188,11 +182,6 @@
         
         th {
             color: black;
-=======
-
-        th{
-          color: black;
->>>>>>> Stashed changes
         }
         
         .savedPropertiesText {
@@ -262,7 +251,7 @@
                 <h2>Saved Properties</h2>
             </div>
             <div id="savedSearchTablePanel">
-                <table id="savedSearchTable">
+                <table class="savedSearchTable">
                     <thead>
                         <tr>
                             <th class="tableImage">Property Type</th>
@@ -705,7 +694,7 @@
                         img_newRow = "Townhouse.png";
                     }
 
-                    newRow["Property Type"] = "";
+                    newRow["Property Type"] = d["ZPID"];
                     newRow["Location"] = "";
                     newRow["Details"] = "";
                     newRow["Rent per Sq. Ft."] = "";
@@ -713,7 +702,7 @@
 
                     matrix.push(newRow)
 
-                    var tr = d3.select("#savedSearchTable tbody")
+                    var tr = d3.select(".savedSearchTable tbody")
                         .selectAll("tr")
                         .data(matrix)
                         .enter().append("tr");
@@ -751,7 +740,6 @@
                             "<p><b>Year Built: </b>" + d["Year Built"] + "</p>" +
                             "<p><b>Rent: </b>$" + d["Rent Amount"] + " per month");
 
-<<<<<<< Updated upstream
                     td.filter(function(k, i) {
                             return i === 4
                         })
@@ -841,98 +829,6 @@
                 function removeSaved(rowNum) {
                     rowNum.remove();
                 }
-=======
-                    // td.filter(function(k, i) {
-                    //         return i === 4
-                    //     })
-                    //     .attr("class", "removeSavedButton")
-                    //     .append("button")
-                    //     .text("Remove")
-                    //     .on("click", function(k){ removeSaved(this)});
-
-                      data_rent = []
-                      data_rent.push({Type:"Property",Median:d["Rent-to-Finished Size Ratio"]})
-                      data_rent.push({Type:"Neighborhood",Median:rentSqFtNeighMed[d["Neighborhood"]]})
-                      data_rent.push({Type:"City",Median:cityRentMed})
-
-                      // var bar_width = 100;
-                      // var bar_height = 100;
-                      // // var margin = {top: 5, right: 5, bottom: 10, left: 8}
-                      // var margin = {top: 0, right: 0, bottom: 0, left: 0}
-
-                      var width = 200,
-                      scaleFactor = 60,
-                      barHeight = 20;
-
-                      td.filter(function(d, i) { return i === 3})
-                      .append("svg")
-                      .attr("class","svgg")
-                      .attr("width", width)
-                      .attr("height", barHeight * data_rent.length);
-
-                      var bar = d3.selectAll(".svgg").selectAll("g")
-                        .data(data_rent)
-                        .enter()
-                        .append("g")
-                        .attr("transform", function(d, i) {
-                              return "translate(0," + i * barHeight + ")";
-                        });
-
-                      bar.append("rect")
-                         .attr("width", function(d) {
-                                  return d.Median * scaleFactor;
-                         })
-                         .attr("height", barHeight - 1);
-
-                      bar.append("text")
-                         .attr("x", function(d) { return (d.Median*scaleFactor); })
-                         .attr("y", barHeight / 2)
-                         .attr("dy", ".35em")
-                         .text(function(d) { return d.Type; });
-
-                      // td.filter(function(d, i) { return i === 3})
-                      // .append("svg")
-                      // .attr("class", "bargraph_rent")
-                      // .attr("width", bar_width + margin.left + margin.right)
-                      // .attr("height", bar_height + margin.top + margin.bottom)
-                      // .append("g")
-                      // .attr("transform",
-                      //       "translate(" + margin.left + "," + margin.top + ")");
-                      //
-                      // var rent_bar_x = d3.scaleBand()
-                      //                 .domain(data_rent.map(function(d) { return d.Type; }))
-                      //                 .range([ 0, width ])
-                      //                 .padding(0.2);
-                      //
-                      // var rent_bar_y = d3.scaleLinear()
-                      //                 .domain([0,2])
-                      //                 .range([bar_height, 0]);
-
-                    // d3.selectAll(".bargraph_rent").append("g")
-                    //   .attr("transform", "translate(0," + bar_height + ")")
-                    //   .call(d3.axisBottom(rent_bar_x))
-                    //   .selectAll("text")
-                    //     .attr("transform", "translate(-10,0)rotate(0)")
-                    //     .style("text-anchor", "center");
-                    //
-                    // d3.selectAll(".bargraph_rent").append("g")
-                    //     .call(d3.axisLeft(rent_bar_y));
-                    //
-                    // d3.selectAll(".bargraph_rent").selectAll("graph")
-                    //   .data(data_rent)
-                    //   .enter()
-                    //   .append("rect")
-                    //     .attr("x", function(d) { return rent_bar_x(d.Type); })
-                    //     .attr("y", function(d) { return rent_bar_y(d.Median); })
-                    //     .attr("width", rent_bar_x.bandwidth())
-                    //     .attr("height", function(d) { return bar_height - rent_bar_y(d.Median); })
-                    //     .attr("fill", "#46a0c7")
-                    }
-
-                    function undoLastRow(lastRow){
-                      document.getElementById('savedSearchTable').rows[lastRow].remove();
-                    }
->>>>>>> Stashed changes
 
                 // Creating the Legend
                 // scatterLeg.append("g")
