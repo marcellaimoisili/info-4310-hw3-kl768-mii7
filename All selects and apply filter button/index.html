@@ -124,6 +124,47 @@
         .introPanel {
             padding: 10px;
         }
+
+        #savedSearchPanel{
+          background-color: #dfe3e4;
+          margin: 0 auto;
+          height: 1000px;
+          left: 0;
+          right: 0;
+        }
+
+        #savedSearchHeader{
+          background-color: #095499;
+          height: 50px;
+          padding-left: 10px;
+          margin: 0 auto;
+          color: white;
+          left: 0;
+          right: 0;
+        }
+
+        #savedSearchHeader h2{
+          text-align: left;
+          margin-left: 20px;
+          padding-top: 10px;
+          font-size: 24px;
+        }
+
+        table, th, td {
+          border: 1px solid black;
+          table-layout: fixed;
+          width: 100%;
+        }
+
+        savedSearchTable td, th {
+          padding: 10px;
+          text-align: center;
+        }
+
+        .tableImage{
+          width: 90px;
+        }
+
     </style>
 </head>
 
@@ -141,7 +182,6 @@
         <h3><strong>An interactive tool for the Zillow Pittsburgh home database.</strong></h3>
         <p>How to Use:</p>
     </div>
-    <div id='p1'>
         <div id="flexPanel">
             <div id="mapPanel">
                 <svg id='viz' height='600' width='800'></svg>
@@ -190,7 +230,24 @@
         </div>
 
         <div id="savedSearchPanel">
+          <div id="savedSearchHeader">
             <h2>Saved Properties</h2>
+          </div>
+          <div id="savedSearchTablePanel">
+            <table class="savedSearchTable">
+               <thead>
+                 <tr>
+                   <th class="tableImage">Property Type</th>
+                   <th>Details</th>
+                   <th>Rent per Sq. Ft.</th>
+                   <th>Bedrooms</th>
+                   <th>Bathrooms</th>
+                   <th></th>
+                 </tr>
+               </thead>
+               <tbody></tbody>
+            </table>
+          </div>
         </div>
 
         <script>
@@ -433,6 +490,11 @@
 
                     let info = d3.select("#propertyDetailsPanel")
                         .style("opacity", 0.95);
+
+                    circles.on("dblclick",function(d){
+                      console.log(d)
+                      addtoSaved(d)
+                    });
                 }
 
                 //Resets all filters and displays all points
@@ -473,10 +535,76 @@
                 let info = d3.select("#propertyDetailsPanel")
                     .style("opacity", 0.95);
 
+                circles.on("dblclick",function(d){
+                  addtoSaved(d)
+                });
+
+                var matrix = []
+
+                function addtoSaved(d){
+                  var newRow = {}
+
+                  if (d["Property Type"] == "Multi Family House"){
+                    newRow["Property Type"] = "MultiFamily.png";
+                  } else if (d["Property Type"] == "Condo") {
+                    newRow["Property Type"] = "Condo.png";
+                  } else if (d["Property Type"] == "Single Family House"){
+                    newRow["Property Type"] = "SingleFamilyHouse.png";
+                  } else{
+                    newRow["Property Type"] = "Townhouse.png";
+                  }
+
+                  newRow["Details"] =
+                  "Size: " + d["Finished Size (Sq.Ft.)"] +
+                  "Neighborhood: " + d["Neighborhood"] +
+                  "Year Built: " + d["Year Built"] +
+                  "Rent: " + d["Rent Amount"];
+
+                  newRow["Rent per Sq. Ft."] = "hi";
+
+                  matrix.push(newRow)
+
+                  var tr = d3.select(".savedSearchTable tbody")
+                   .selectAll("tr")
+                   .data(matrix)
+                   .enter().append("tr");
+
+                  tr.selectAll("td").filter(function(d, i) { return i === 0})
+                  .append("td")
+                  .append("img")
+                  .attr('src', function(d) {return d["Property Type"];})
+                  .attr("class", "tableImgs");
+
+                 // var tdImg = tr.select("tr")
+                 //  .data(matrix)
+                 //  .enter()
+                 //  .append("td")
+                 //  .append("img")
+                 //  .attr('src', function(d) {return d["Property Type"];})
+                 //  .attr("class", "tableImgs");
+
+                  // var td = tr.selectAll("td")
+                  //  .data(function(d, i) {
+                  //    return Object.values(d); })
+                  //  .enter()
+                  //  .append("td")
+                  //  .text(function(d) { return d; });
+                   //
+                   // var tdImg = tr.selectAll("td.tableImage")
+                   // .data(function(d, i) {
+                   //   console.log(Object.values(d))
+                   //   return Object.values(d); })
+                   // .enter()
+                   //   .append("td")
+                   //   .attr("class", "tableImage")
+                   //   .append("img")
+                   //   .attr('src', function(d) {
+                   //     console.log(d)
+                   //     return d;});
+                }
             }
             requestData();
         </script>
-    </div>
 </body>
 
 </html>
