@@ -16,23 +16,23 @@
         .selectRentPrice text {
             margin-right: 15px;
         }
-        
+
         .selectZipCode,
         .selectPropertyType,
         .selectRentPrice {
             margin-right: 5px;
         }
-        
+
         .ZipCodeButton {
             margin-right: 15px;
             margin-bottom: 10px;
             margin-top: 10px;
         }
-        
+
         #resetbutton {
             margin-top: 30px;
         }
-        
+
         #propertyDetailsPanel {
             height: 463px;
             flex: 0 0 6em;
@@ -41,11 +41,11 @@
             background-color: #095499;
             color: white;
         }
-        
+
         #flexPanel {
             display: flex;
         }
-        
+
         #filterPanel {
             height: 460px;
             padding: 20px;
@@ -54,21 +54,21 @@
             border: 2px solid #095499;
             flex: 0 0 42em;
         }
-        
+
         #filterPanel h3 {
             font-size: 20px;
             text-align: center;
             margin-top: 0px;
         }
-        
+
         #filterPanel h4 {
             font-size: 18px;
         }
-        
+
         #mapPanel {
             padding: 5px;
         }
-        
+
         .headerflex {
             background-color: #095499;
             height: 100px;
@@ -82,53 +82,53 @@
             left: 0;
             right: 0;
         }
-        
+
         #headertitle h1 {
             flex: 2;
             text-align: left;
             margin-left: 20px;
             font-size: 40px;
         }
-        
+
         #headerdetails {
             flex: 1;
             text-align: right;
             padding-right: 10px;
             margin-top: 60px;
         }
-        
+
         #headerdetails h4 {
             margin: 0;
             font-style: italic;
             font-weight: normal;
         }
-        
+
         path {
             stroke: #153859;
             stroke-width: 0.5px;
             fill: #A5ACAF;
         }
-        
+
         .circlePoints {
             stroke: #153859;
         }
-        
+
         body {
             font-family: Helvetica;
             background: #f9f9f9;
         }
-        
+
         .introPanel {
             padding: 10px;
             padding-top: 110px;
         }
-        
+
         #savedSearchPanel {
             margin: 0 auto;
             left: 0;
             right: 0;
         }
-        
+
         #savedSearchHeader {
             background-color: #095499;
             height: 50px;
@@ -138,14 +138,14 @@
             left: 0;
             right: 0;
         }
-        
+
         #savedSearchHeader h2 {
             text-align: left;
             margin-left: 20px;
             padding-top: 10px;
             font-size: 24px;
         }
-        
+
         table,
         th,
         td {
@@ -153,90 +153,90 @@
             table-layout: fixed;
             width: 100%;
         }
-        
+
         #savedSearchTable {
             background-color: #dfe3e4;
         }
-        
+
         #savedSearchTable td,
         th {
             padding: 10px;
             text-align: center;
         }
-        
+
         .tableImage {
             width: 100px;
         }
-        
+
         .tableImage img {
             text-align: center;
         }
-        
+
         .tableButton {
             width: 90px;
         }
-        
+
         .removeSavedButton {
             text-align: center;
         }
-        
+
         th {
             color: black;
         }
-        
+
         .savedPropertiesText {
             text-align: center;
             color: black;
         }
-        
+
         #checkBoxZipCodeDiv {
             padding-bottom: 2vh;
         }
-        
+
         .propertyIconLegend {
             width: 50px;
             height: 50px;
             padding: 10px;
         }
-        
+
         #propertyDiv {
             display: flex;
             width: 700px;
             height: 120px;
             padding-left: 30px;
         }
-        
+
         .propertyIconDiv h5 {
             text-align: center;
             width: 50px;
             padding: 10px;
             margin-top: -20px;
         }
-        
+
         .flexLegTitles {
             display: flex;
             width: 700px;
             padding-left: 30px;
         }
-        
+
         #propertyLegTitle {
             margin: 0 auto;
             padding-right: 20px;
             padding-top: 10px;
             padding-bottom: 10px;
         }
-        
+
         #propertyLegTitle2 {
             margin: 0 auto;
             padding-right: 60px;
             padding-top: 10px;
             padding-bottom: 10px;
         }
-        
+
         .propertyButtonsDiv {
             margin-left: 20px;
         }
-        
+
         .propertyBarDiv {
             display: flex;
             height: 120px;
@@ -244,7 +244,7 @@
             padding-left: 100px;
             padding-right: 20px;
         }
-        
+
         .propertyBarColorDiv h5 {
             width: 50px;
             padding-left: 10px;
@@ -253,11 +253,11 @@
             margin-right: 0px;
             text-align: center;
         }
-        
+
         .propertyBarColorDiv svg {
             margin-left: 10px;
         }
-        
+
         .propertyButtonsDiv button {
             margin-left: 30px;
             background-color: #095499;
@@ -269,28 +269,35 @@
             margin-top: -15px;
             font-weight: bold;
         }
-        
+
         .propertyButtonsDiv {
             display: flex;
         }
-        
+
         #saveInstructions {
             margin: 0 auto;
             padding: 20px;
         }
-        
+
         #introParagraph {
             color: #104678;
         }
-        
-        #legend {
+
+        /* #legend { */
             /* background-color: black; */
-            height: 5vh;
+            /* height: 5vh;
             width: 800;
-        }
-        
-        #legend_placeholder {
+        } */
+
+        /* #legend_placeholder {
             margin-left: 8vw;
+        } */
+
+        .mapLegDiv{
+          display: flex;
+        }
+        .mapLegCircleDiv{
+          padding: 20px;
         }
     </style>
 </head>
@@ -331,10 +338,24 @@
         <div id="flexPanel">
             <div id="mapPanel">
                 <svg id='viz' height='600' width='800'></svg>
-                <div id="legend">
-                    <!-- "Small (< 1500 Sq. Ft.) ", "Medium (1500-2500 Sq. Ft.) ", "Large (>2500 Sq. Ft.) " -->
-                    <img id="legend_placeholder" src="legend_placeholder.png" alt="Legend" width="60%">
+                <div class="mapLegDiv">
+                    <div class="mapLegCircleDiv">
+                        <svg width="10" height="10"><circle r="10" style="fill:#FFA346"/></svg>
+                        <h5>Small Size (Square Feet)</h5>
+                    </div>
+                    <div class="mapLegCircleDiv">
+                        <svg width="10" height="10"><circle r="10" style="fill:#46b7ff"/></svg>
+                        <h5>Medium Size (Square Feet)</h5>
+                    </div>
+                    <div class="mapLegCircleDiv">
+                        <svg width="10" height="10"><circle r="10" style="fill:#c200a9"/></svg>
+                        <h5>Large Size (Square Feet)</h5>
+                    </div>
                 </div>
+                <!-- <div id="legend"> -->
+                    <!-- "Small (< 1500 Sq. Ft.) ", "Medium (1500-2500 Sq. Ft.) ", "Large (>2500 Sq. Ft.) " -->
+                    <!-- <img id="legend_placeholder" src="legend_placeholder.png" alt="Legend" width="60%">
+                </div> -->
             </div>
 
             <div id="propertyDetailsPanel">
