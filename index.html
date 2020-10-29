@@ -707,15 +707,6 @@
                         .attr('src', img_newRow)
                         .attr("class", "tableImgs");
 
-<<<<<<< Updated upstream
-                    td.filter(function(d, i) {
-                            return i === 2
-                        })
-                        .append("img")
-                        .attr('src', img_newRow)
-                        .attr("class", "tableImgs");
-
-=======
                       data_rent = []
                       data_rent.push({Type:"Property",Median:d["Rent-to-Finished Size Ratio"]})
                       data_rent.push({Type:"Neighborhood",Median:rentSqFtNeighMed[d["Neighborhood"]]})
@@ -727,64 +718,49 @@
                       .attr("height", 50)
                       .attr("class", "bargraph_rent");
 
-                      // Creating bar graph for rent per sq ft
-                      const rentMedianExtent = d3.extent(
-                        d["Rent-to-Finished Size Ratio"],
-                        rentSqFtNeighMed[d["Neighborhood"]],
-                        cityRentMed
-                      );
-
                       var bar_width = 100;
                       var bar_height = 100;
+                      var margin = {top: 30, right: 30, bottom: 70, left: 60}
+
+                      td.filter(function(d, i) {
+                              return i === 2
+                          })
+                          .append("svg")
+                          .attr("class","bargraph_rent")
+                          .attr("width", bar_width + margin.left + margin.right)
+                          .attr("height", bar_height + margin.top + margin.bottom)
+                        .append("g")
+                          .attr("transform",
+                                "translate(" + margin.left + "," + margin.top + ")");
+
                       var rent_bar_x = d3.scaleBand()
-                                      .domain(data_rent.map(function(d) { console.log(d.Type) return d.Type; }))
+                                      .domain(data_rent.map(function(d) { return d.Type; }))
                                       .range([ 0, width ])
                                       .padding(0.2);
-                      // var rent_bar_y = d3.scale.linear()
-                      //                 .domain(rentMedianExtent)
-                      //                 .range([bar_height, 0]);
-                      //
-                      // var rent_bar_xAxis = d3.svg.axis()
-                      //     .scale(rent_bar_x)
-                      //     .orient("bottom");
-                      //
-                      // var rent_bar_yAxis = d3.svg.axis()
-                      //     .scale(rent_bar_y)
-                      //     .orient("left");
-                      //
-                      // d3.select("svg.bargraph_rent")
-                      // .append("g")
-                      //   .attr("class", "bargraph_rent x axis")
-                      //   .attr("transform", "translate(0," + height + ")")
-                      //   .call(rent_bar_xAxis)
-                      // .selectAll("text")
-                      //   .style("text-anchor", "end")
-                      //   .attr("dx", "-.8em")
-                      //   .attr("dy", "-.55em")
-                      //   .attr("transform", "rotate(-90)" );
-                      //
-                      // d3.select("svg.bargraph_rent")
-                      // .append("g")
-                      //   .attr("class", "bargraph_rent y axis")
-                      //   .call(rent_bar_yAxis)
-                      // .append("text")
-                      //   .attr("transform", "rotate(-90)")
-                      //   .attr("y", 6)
-                      //   .attr("dy", ".71em")
-                      //   .style("text-anchor", "end")
-                      //   .text("Median ($)");
-                      //
-                      // var bar_rent = d3.select(".savedSearchTable tbody")
-                      // .select("svg.bargraph_rent")
-                      //   .data(data_rent)
-                      //   .enter()
-                      //   .append("rect")
-                      //   .style("fill", "steelblue")
-                      //   .attr("x", function(d) { return d.Type; })
-                      //   .attr("width", rent_bar_x.rangeBand())
-                      //   .attr("y", function(d) { return rent_bar_y(d.Median); })
-                      //   .attr("height", function(d) { return bar_height - rent_bar_y(d.Median); });
 
+                      d3.selectAll("svg.bargraph_rent").append("g")
+                        .attr("transform", "translate(0," + bar_height + ")")
+                        .call(d3.axisBottom(rent_bar_x))
+                        .selectAll("text")
+                          .attr("transform", "translate(-10,0)rotate(-45)")
+                          .style("text-anchor", "end");
+
+                      var rent_bar_y = d3.scaleLinear()
+                                      .domain([0,2])
+                                      .range([bar_height, 0]);
+
+                      d3.selectAll("svg.bargraph_rent").append("g")
+                          .call(d3.axisLeft(rent_bar_y));
+
+                      d3.selectAll("svg.bargraph_rent")
+                        .data(data_rent)
+                        .enter()
+                        .append("rect")
+                          .attr("x", function(d) { return rent_bar_x(d.Type); })
+                          .attr("y", function(d) { return rent_bar_y(d.Median); })
+                          .attr("width", rent_bar_x.bandwidth())
+                          .attr("height", function(d) { return bar_height - rent_bar_y(d.Median); })
+                          .attr("fill", "#69b3a2")
                     }
 
                     // Creating the Legend
@@ -818,8 +794,7 @@
                       //      .attr("dy", ".35em")
                       //      .style("text-anchor", "start")
                       //      .text(function(d) { return d;});
->>>>>>> Stashed changes
-                }
+                // }
             }
             requestData();
         </script>
