@@ -298,7 +298,17 @@
         }
         .mapLegCircleDiv{
           padding: 20px;
+          margin-left: 50px;
         }
+        .mapLegCircleDiv svg{
+          margin-left: 60px;
+        }
+
+        .mapLegCircleDiv h5{
+          margin-top: 10px;
+        }
+
+
     </style>
 </head>
 
@@ -340,16 +350,16 @@
                 <svg id='viz' height='600' width='800'></svg>
                 <div class="mapLegDiv">
                     <div class="mapLegCircleDiv">
-                        <svg width="10" height="10"><circle r="10" style="fill:#FFA346"/></svg>
-                        <h5>Small Size (Square Feet)</h5>
+                        <svg width="20" height="20"><circle cx="10" cy="10" r="10" style="fill:#FFA346"/></svg>
+                        <h5>Small ( < 1500 Sq.Ft. )</h5>
                     </div>
                     <div class="mapLegCircleDiv">
-                        <svg width="10" height="10"><circle r="10" style="fill:#46b7ff"/></svg>
-                        <h5>Medium Size (Square Feet)</h5>
+                        <svg width="20" class="middleCircle" height="20"><circle cx="10" cy="10" r="10" style="fill:#46b7ff"/></svg>
+                        <h5>Medium (1500 - 2500 Sq.Ft. )</h5>
                     </div>
                     <div class="mapLegCircleDiv">
-                        <svg width="10" height="10"><circle r="10" style="fill:#c200a9"/></svg>
-                        <h5>Large Size (Square Feet)</h5>
+                        <svg width="20" height="20"><circle cx="10" cy="10" r="10" style="fill:#c200a9"/></svg>
+                        <h5>Large ( > 2500 Sq.Ft. )</h5>
                     </div>
                 </div>
                 <!-- <div id="legend"> -->
