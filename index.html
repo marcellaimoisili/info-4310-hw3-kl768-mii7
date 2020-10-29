@@ -168,6 +168,10 @@
         .tableImage {
             width: 90px;
         }
+
+        .tableButton {
+            width: 90px;
+        }
     </style>
 </head>
 
@@ -233,9 +237,7 @@
                             <th class="tableImage">Property Type</th>
                             <th>Details</th>
                             <th>Rent per Sq. Ft.</th>
-                            <th>Bedrooms</th>
-                            <th>Bathrooms</th>
-                            <th></th>
+                            <th class="tableButton">Remove</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -679,8 +681,6 @@
                         "Rent: " + d["Rent Amount"];
 
                     newRow["Rent per Sq. Ft."] = "";
-                    newRow["Bedrooms"] = "";
-                    newRow["Bathroom"] = "";
                     newRow["Button"] = "";
 
                     matrix.push(newRow)
@@ -720,7 +720,7 @@
 
                       var bar_width = 100;
                       var bar_height = 100;
-                      var margin = {top: 30, right: 30, bottom: 70, left: 60}
+                      var margin = {top: 5, right: 5, bottom: 10, left: 8}
 
                       td.filter(function(d, i) {
                               return i === 2
