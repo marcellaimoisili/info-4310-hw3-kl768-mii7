@@ -270,6 +270,9 @@
                 var allPropertyTypes = ["Single Family House", "Townhouse", "Condo", "Multi Family House"]
                 var allZipCodes = []
                 var allRentValues = []
+                var cityRentSqFtTotal = 0
+                var neighList = []
+                var neighCounts = {}
 
                 properties.forEach(d => {
                     if (d['Property Type'] == "Condominium") {
@@ -288,7 +291,40 @@
                     if (!allRentValues.includes(d['Rent Amount'])) {
                         allRentValues.push(d['Rent Amount'])
                     }
+                    cityRentSqFtTotal += parseFloat(d['Rent-to-Finished Size Ratio'])
+                    if (!neighList.includes(d['Neighborhood'])){
+                      neighList.push(d['Neighborhood'])
+                    }
+                    if (!(d["Neighborhood"] in neighCounts)){
+                      neighCounts[d["Neighborhood"]] = 1
+                    } else{
+                      neighCounts[d["Neighborhood"]] += 1
+                    }
                 });
+
+                var cityRentMed = (cityRentSqFtTotal/properties.length).toFixed(2)
+                var rentSqFtNeighMed = {}
+
+                for(i=0; i<properties.length; i++){
+                  for(j=0; j<neighList.length; j++){
+                    if(properties[i]["Neighborhood"]==neighList[j]){
+                      if(!(neighList[j] in rentSqFtNeighMed)){
+                        rentSqFtNeighMed[neighList[j]] = parseFloat(properties[i]['Rent-to-Finished Size Ratio'])
+                      }else{
+                        rentSqFtNeighMed[neighList[j]] += parseFloat(properties[i]['Rent-to-Finished Size Ratio'])
+                      }
+                    }
+                  }
+                }
+
+                for (var key in rentSqFtNeighMed) {
+                  for (var key2 in neighCounts) {
+                    if(key==key2){
+                      rentSqFtNeighMed[key] = (rentSqFtNeighMed[key]/neighCounts[key2]).toFixed(2)
+                    }
+                  }
+                }
+
                 allZipCodes.sort();
                 const RentExtent = d3.extent(allRentValues);
 
@@ -671,6 +707,7 @@
                         .attr('src', img_newRow)
                         .attr("class", "tableImgs");
 
+<<<<<<< Updated upstream
                     td.filter(function(d, i) {
                             return i === 2
                         })
@@ -678,6 +715,110 @@
                         .attr('src', img_newRow)
                         .attr("class", "tableImgs");
 
+=======
+                      data_rent = []
+                      data_rent.push({Type:"Property",Median:d["Rent-to-Finished Size Ratio"]})
+                      data_rent.push({Type:"Neighborhood",Median:rentSqFtNeighMed[d["Neighborhood"]]})
+                      data_rent.push({Type:"City",Median:cityRentMed})
+
+                      td.filter(function(d, i) { return i === 2})
+                      .append("svg")
+                      .attr("width", 50)
+                      .attr("height", 50)
+                      .attr("class", "bargraph_rent");
+
+                      // Creating bar graph for rent per sq ft
+                      const rentMedianExtent = d3.extent(
+                        d["Rent-to-Finished Size Ratio"],
+                        rentSqFtNeighMed[d["Neighborhood"]],
+                        cityRentMed
+                      );
+
+                      var bar_width = 100;
+                      var bar_height = 100;
+                      var rent_bar_x = d3.scaleBand()
+                                      .domain(data_rent.map(function(d) { console.log(d.Type) return d.Type; }))
+                                      .range([ 0, width ])
+                                      .padding(0.2);
+                      // var rent_bar_y = d3.scale.linear()
+                      //                 .domain(rentMedianExtent)
+                      //                 .range([bar_height, 0]);
+                      //
+                      // var rent_bar_xAxis = d3.svg.axis()
+                      //     .scale(rent_bar_x)
+                      //     .orient("bottom");
+                      //
+                      // var rent_bar_yAxis = d3.svg.axis()
+                      //     .scale(rent_bar_y)
+                      //     .orient("left");
+                      //
+                      // d3.select("svg.bargraph_rent")
+                      // .append("g")
+                      //   .attr("class", "bargraph_rent x axis")
+                      //   .attr("transform", "translate(0," + height + ")")
+                      //   .call(rent_bar_xAxis)
+                      // .selectAll("text")
+                      //   .style("text-anchor", "end")
+                      //   .attr("dx", "-.8em")
+                      //   .attr("dy", "-.55em")
+                      //   .attr("transform", "rotate(-90)" );
+                      //
+                      // d3.select("svg.bargraph_rent")
+                      // .append("g")
+                      //   .attr("class", "bargraph_rent y axis")
+                      //   .call(rent_bar_yAxis)
+                      // .append("text")
+                      //   .attr("transform", "rotate(-90)")
+                      //   .attr("y", 6)
+                      //   .attr("dy", ".71em")
+                      //   .style("text-anchor", "end")
+                      //   .text("Median ($)");
+                      //
+                      // var bar_rent = d3.select(".savedSearchTable tbody")
+                      // .select("svg.bargraph_rent")
+                      //   .data(data_rent)
+                      //   .enter()
+                      //   .append("rect")
+                      //   .style("fill", "steelblue")
+                      //   .attr("x", function(d) { return d.Type; })
+                      //   .attr("width", rent_bar_x.rangeBand())
+                      //   .attr("y", function(d) { return rent_bar_y(d.Median); })
+                      //   .attr("height", function(d) { return bar_height - rent_bar_y(d.Median); });
+
+                    }
+
+                    // Creating the Legend
+                      // scatterLeg.append("g")
+                      //   .attr("class", "legend-title")
+                      //   .append("text")
+                      //   .text("Year Released")
+                      //   .attr("x",10)
+                      //   .attr("y",15)
+                      //   .style("font-weight","bold")
+                      //   .style("text-anchor","start");
+                      //
+                      // var legend = scatterLeg.selectAll()
+                      // .data(["1900s","1910s","1920s","1930s","1940s","1950s","1960s","1970s","1980s","1990s","2000s","2010s","2020s"])
+                      // .enter().append("g")
+                      // .attr("class", "legend")
+                      // .attr("transform", function(d, i) { return "translate(10," + i * 22 +")"; });
+                      //
+                      // // Draw Colored Circles in the Legend
+                      // legend.append("circle")
+                      //      .attr("cx", 27)
+                      //      .attr("cy", 35)
+                      //      .attr("r", 5)
+                      //      .style("fill", function(d){return yearColorScale(d)})
+                      //      .attr("transform", function(d, i) { return "translate(0," + i * -0.05 + ")"; });
+                      //
+                      // // Add Corresponding Text in the Legend
+                      // legend.append("text")
+                      //      .attr("x", 37)
+                      //      .attr("y", 35)
+                      //      .attr("dy", ".35em")
+                      //      .style("text-anchor", "start")
+                      //      .text(function(d) { return d;});
+>>>>>>> Stashed changes
                 }
             }
             requestData();
