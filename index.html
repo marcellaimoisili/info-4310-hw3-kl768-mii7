@@ -172,6 +172,11 @@
         .tableButton {
             width: 90px;
         }
+
+        .savedPropertiesText{
+          text-align: center;
+        }
+
     </style>
 </head>
 
@@ -235,6 +240,7 @@
                     <thead>
                         <tr>
                             <th class="tableImage">Property Type</th>
+                            <th>Location</th>
                             <th>Details</th>
                             <th>Rent per Sq. Ft.</th>
                             <th class="tableButton">Remove</th>
@@ -673,15 +679,10 @@
                     }
 
                     newRow["Property Type"] = "";
-
-                    newRow["Details"] =
-                        "Size: " + d["Finished Size (Sq.Ft.)"] +
-                        "Neighborhood: " + d["Neighborhood"] +
-                        "Year Built: " + d["Year Built"] +
-                        "Rent: " + d["Rent Amount"];
-
+                    newRow["Location"] = "";
+                    newRow["Details"] = "";
                     newRow["Rent per Sq. Ft."] = "";
-                    newRow["Button"] = "";
+                    newRow["Remove"] = "";
 
                     matrix.push(newRow)
 
@@ -707,24 +708,43 @@
                         .attr('src', img_newRow)
                         .attr("class", "tableImgs");
 
+                    td.filter(function(d, i) {
+                            return i === 1
+                        })
+                        .attr("class","savedPropertiesText")
+                        .html("<p><b>Address: </b>" + d["Street Address"] + "</p>" +
+                        "<p><b>Neighborhood: </b>" + d["Neighborhood"] + "</p>" +
+                        "<p><b>Zip Code: </b>" + d["Zipcode"] + "</p>");
+
+                    td.filter(function(d, i) {
+                            return i === 2
+                        })
+                        .attr("class","savedPropertiesText")
+                        .html("<p><b>Size: </b>" + d["Finished Size (Sq.Ft.)"] + " Sq. Ft. </p>" +
+                        "<p><b>Year Built: </b>" + d["Year Built"] + "</p>" +
+                        "<p><b>Rent: </b>" + d["Rent Amount"]);
+
+                    td.filter(function(d, i) {
+                            return i === 4
+                        })
+                        .append("img")
+                        .attr('src', img_newRow)
+                        .attr("class", "tableImgs");
+
                       data_rent = []
                       data_rent.push({Type:"Property",Median:d["Rent-to-Finished Size Ratio"]})
                       data_rent.push({Type:"Neighborhood",Median:rentSqFtNeighMed[d["Neighborhood"]]})
                       data_rent.push({Type:"City",Median:cityRentMed})
 
-                      td.filter(function(d, i) { return i === 2})
+                      td.filter(function(d, i) { return i === 3})
                       .append("svg")
-                      .attr("width", 50)
-                      .attr("height", 50)
                       .attr("class", "bargraph_rent");
 
                       var bar_width = 100;
                       var bar_height = 100;
                       var margin = {top: 5, right: 5, bottom: 10, left: 8}
 
-                      td.filter(function(d, i) {
-                              return i === 2
-                          })
+                      d3.selectAll("svg.bargraph_rent")
                           .append("svg")
                           .attr("class","bargraph_rent")
                           .attr("width", bar_width + margin.left + margin.right)
