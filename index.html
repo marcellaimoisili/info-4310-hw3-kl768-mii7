@@ -166,11 +166,11 @@
                 </div>
 
                 <script>
-                    function checkAllZipCodes() {
+                    async function checkAllZipCodes() {
                         d3.selectAll('.selectZipCode').property('checked', true);
                     }
 
-                    function uncheckAllZipCodes() {
+                    async function uncheckAllZipCodes() {
                         d3.selectAll('.selectZipCode').property('checked', false);
                     }
                 </script>
@@ -506,9 +506,8 @@
                     d3.selectAll(".selectRentPrice").property("checked", false);
                     d3.selectAll(".selectZipCode").property("checked", false);
                     update()
+                        // d3.selectAll("#resetbutton").attr("onclick", 'reset()');
                 }
-
-                //d3.selectAll("#resetbutton").attr("onclick", 'reset()');
 
                 //Mouseovers
                 circles.on("mouseover", function(d) {
